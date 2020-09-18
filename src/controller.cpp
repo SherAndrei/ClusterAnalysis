@@ -19,9 +19,10 @@ void Controller::generate_cloud(double meanX, double meanY, double varianceX, do
     field.clouds.push_back(result);
 }
 
-void Controller::print_to_file(const string& filename) const
+void Controller::print_to_file() const
 {
-    ofstream out(filename);
-    out << field << endl;
+    ofstream out("output.txt");
+    out << field << '\n';
+    out.close();
 }
 

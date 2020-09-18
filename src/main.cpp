@@ -2,6 +2,6 @@
 
 int main()
 {
-    Interface inter;
-    inter.start();
+    Interface i; 
+    i.start();
 }

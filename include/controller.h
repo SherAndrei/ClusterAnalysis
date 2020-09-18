@@ -9,7 +9,7 @@ public:
     //minx среднее x, miny среднее y, sX дисперсия x, sY дисперсия y
     //Nc число точек
     void generate_cloud(double meanX, double meanY, double varianceX, double varianceY, int N);
-    void print_to_file(const std::string& filename) const;
+    void print_to_file() const;
 private:
     Field field;
     bool record_log = true;

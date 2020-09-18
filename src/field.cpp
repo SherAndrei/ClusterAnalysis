@@ -5,7 +5,7 @@ using namespace std;
 ostream& operator<<(ostream& os,const Field& f)
 {
     for(const auto& cloud : f.clouds)
-        os << cloud << endl;
+        os << cloud << '\n';
     
     return os;
 }

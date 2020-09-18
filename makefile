@@ -10,7 +10,7 @@ SRC 	:= ./src
 
 #Compiler features
 CC     := g++
-CFLAGS := -g -O0 -Werror -Wextra -Wpedantic -Wall -I$(INCLUDE)
+CFLAGS := -Werror -Wextra -Wpedantic -Wall -I$(INCLUDE)
 
 #Variables
 EXE  := $(BIN)/main
@@ -31,7 +31,9 @@ $(OBJ)/%.o: $(SRC)/%.cpp | $(OBJ)
 $(BIN) $(OBJ):
 	$(MKDIR) $@
 
-.PHONY: clean
+.PHONY: clean debug
+
+debug: CFLAGS += -DDEBUG -g -O0 
 
 clean:
 	$(RMDIR) $(OBJ) $(BIN)

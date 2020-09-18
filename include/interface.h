@@ -1,25 +1,20 @@
 #pragma once
 #include "controller.h"
 #include <iostream>
-#include <fstream>
-#include <string>
+#include <sstream>
 
 class Interface
 {
 public:
-    Interface(int new_id = 1)
-        : ID(new_id) {}
-    void/*???*/ get_command(std::istream& os);
-    // void/*???*/ get_command_from_cons(std::ostream& os);
-    // void/*???*/ get_command_from_file(std::ofstream& ofile);
-    void/*???*/ log() const;
-    //Печать всего списка реализованных команд в help.txt
-    void/*???*/ help() const;
+    Interface(int new_id = 1, bool record_rule = true)
+        : ID(new_id), record_log(record_rule) {}
     void start();
+    void get_command(std::istream& os);
+    void log();
+    void help() const;
 private:
     const int ID;
-    bool record_log = true;
-    std::string _log = {};
-    std::string _log_name = {};
+    const bool record_log;
+    std::ostringstream _log = {};
     Controller controller;
 };
