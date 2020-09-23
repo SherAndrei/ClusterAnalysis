@@ -36,7 +36,7 @@ $(BIN) $(OBJ):
 debug: CFLAGS += -DDEBUG -g -O0 
 debug: $(EXE)
 
-release: CFLAGS += -DRELEASE -03 
+release: CFLAGS += -DRELEASE -O3 
 release: $(EXE)
 
 clean:

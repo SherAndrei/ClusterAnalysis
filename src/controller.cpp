@@ -6,16 +6,30 @@
 
 using namespace std;
 
-void Controller::generate_cloud(double meanX, double meanY, double varianceX, double varianceY, int Nc)
+static random_device rd;
+static mt19937 gen(rd());
+
+void Controller::cloud(double meanX, double meanY, double varianceX, double varianceY, int N)
 {
-    mt19937 gen;
     normal_distribution<> for_x(meanX, varianceX);
     normal_distribution<> for_y(meanY, varianceY);
     Cloud result;
-    for(int i = 0; i < Nc; ++i)
+    for(int i = 0; i < N; ++i)
         result.points.push_back({for_x(gen), for_y(gen)});
 
-    field.N_points += Nc;
+    field.N_points += N;
+    field.clouds.push_back(result);
+}
+
+void Controller::starsky(double minX, double maxX, double minY, double maxY, int N)
+{
+    uniform_real_distribution<double> for_x(minX, maxX);
+    uniform_real_distribution<double> for_y(minY, maxY);
+    Cloud result;
+    for(int i = 0; i < N; ++i)
+        result.points.push_back({for_x(gen), for_y(gen)});
+
+    field.N_points += N;
     field.clouds.push_back(result);
 }
 

@@ -67,14 +67,14 @@ void Interface::get_command(istream& is)
             double varianceY = 1.;
             get_param(iss, ok, varianceY);
             
-            int N = 0;
+            int N = 1'000;
             if(ok && iss.peek() != EOF) {
                 ok = ok && iss >> N;
             }
 
             if (!ok) {
-                cout << "Wrong format: CREATE " << parameters << '\n';
-                log_in("Wrong format: CREATE " + parameters);
+                cout << "Wrong format: " << command << ' ' << parameters << '\n';
+                log_in("Wrong format: " + command + ' ' + parameters);
                 continue;
             }
             log_in(command + ' '  + to_string(meanX) + ", "
@@ -83,7 +83,42 @@ void Interface::get_command(istream& is)
                                   + to_string(varianceY) + ", "
                                   + to_string(N));
             
-            controller.generate_cloud(meanX, meanY, varianceX, varianceY, N);
+            controller.cloud(meanX, meanY, varianceX, varianceY, N);
+        } else if (command == "STARSKY") {
+            string parameters;
+            getline(is >> ws, parameters);
+
+            iss.clear();
+            iss.str(parameters);
+            
+            bool ok = true;
+            double minX = 0;
+            get_param(iss, ok, minX);
+            double maxX = 1.;
+            get_param(iss, ok, maxX);
+            double minY = 0.;
+            get_param(iss, ok, minY);
+            double maxY = 1.;
+            get_param(iss, ok, maxY);
+       
+            int N = 1'000;
+            if(ok && iss.peek() != EOF) {
+                ok = ok && iss >> N;
+            }
+
+            if (!ok) {
+                cout << "Wrong format: " << command << ' ' << parameters << '\n';
+                log_in("Wrong format: " + command + ' ' + parameters);
+                continue;
+            }
+            log_in(command + ' '  + to_string(minX) + ", "
+                                  + to_string(maxX) + ", "
+                                  + to_string(minY) + ", "
+                                  + to_string(maxY) + ", "
+                                  + to_string(N));
+            
+
+            controller.starsky(minX,maxX,minY,maxY,N);  
         } else if (command == "PRINT") {
             log_in(command);
             controller.print_to_file(); 
@@ -96,7 +131,8 @@ void Interface::get_command(istream& is)
         } else if (command == "END") {
             break;
         } else {
-            cout << "Unknown command: " << command << endl;
+            cout << "Unknown command: " << command << '\n'
+                 << "Use HELP to see possible commands" << endl;
             log_in("Unknown command: " + command);
         }
         
@@ -122,6 +158,10 @@ void Interface::help() const
          << "\t\tGenerates cloud with listed parameters\n"
          << "\t\tIf nothing is listed, generates cloud with default parameters:\n"
          << "\t\tmeanX = 0, meanY = 0, varianceX = 1, varianceY = 1, N = 1'000\n"
+         << "\tSTARSKY <minX>, <maxX>, <minY>, <maxY>, <N>\n"
+         << "\t\tGenerates cloud evenly distributed on a rectangle [minX;maxX] x [minY;maxY]\n"
+         << "\t\tIf nothing is listed, generates cloud with default parameters:\n"
+         << "\t\tminX = 0, maxX = 1, minY = 0, maxY = 1, N = 1'000\n"
          << "\tPRINT\n"
          << "\t\tPrints all data to output.txt\n"
          << "\tLOG\n"

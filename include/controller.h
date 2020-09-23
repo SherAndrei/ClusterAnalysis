@@ -6,9 +6,8 @@ class Controller
 {
 public:
     Controller() = default;
-    //minx среднее x, miny среднее y, sX дисперсия x, sY дисперсия y
-    //Nc число точек
-    void generate_cloud(double meanX, double meanY, double varianceX, double varianceY, int N);
+    void cloud(double meanX, double meanY, double varianceX, double varianceY, int N);
+    void starsky(double minX, double maxX, double minY, double maxY, int N);
     void print_to_file() const;
 private:
     Field field;
