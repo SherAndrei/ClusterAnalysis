@@ -31,9 +31,13 @@ $(OBJ)/%.o: $(SRC)/%.cpp | $(OBJ)
 $(BIN) $(OBJ):
 	$(MKDIR) $@
 
-.PHONY: clean debug
+.PHONY: clean debug release
 
 debug: CFLAGS += -DDEBUG -g -O0 
+debug: $(EXE)
+
+release: CFLAGS += -DRELEASE -03 
+release: $(EXE)
 
 clean:
 	$(RMDIR) $(OBJ) $(BIN)

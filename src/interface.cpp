@@ -21,7 +21,7 @@ void Interface::start()
         string filename;
         cout << "Enter filename:" << endl;
         cin >> filename;
-        filename = "in/" + filename;
+        // filename = "in/" + filename;
 
         ifstream input(filename);
         cout << "Reading commands from file..." << endl;
@@ -33,55 +33,82 @@ void Interface::start()
         break;
     }
 }
-void Interface::get_command(istream& os)
+
+void get_param(istream& is, bool& ok, double& param)
+{
+    if(ok) {
+        if(is.peek() != ',') {
+            ok = ok && is >> param;
+        }
+        is.ignore(1);
+    }
+}
+
+void Interface::get_command(istream& is)
 {
     string command;
-    while(os >> command)
+    istringstream iss;
+    while(is >> command)
     {
-        if(command == "GEN CLOUD") {
-            double meanX, meanY, varianceX, varianceY;
-            int N;
+        if(command == "CREATE") {
+            string parameters;
+            getline(is >> ws, parameters);
 
+            iss.clear();
+            iss.str(parameters);
+            
             bool ok = true;
-            ok = ok && (os >> meanX);
-            ok = ok && (os >> meanY);
-            ok = ok && (os >> varianceX);
-            ok = ok && (os >> varianceY);
-            ok = ok && (os >> N);
+            double meanX = 0;
+            get_param(iss, ok, meanX);
+            double meanY = 0.;
+            get_param(iss, ok, meanY);
+            double varianceX = 1.;
+            get_param(iss, ok, varianceX);
+            double varianceY = 1.;
+            get_param(iss, ok, varianceY);
+            
+            int N = 0;
+            if(ok && iss.peek() != EOF) {
+                ok = ok && iss >> N;
+            }
+
             if (!ok) {
-                cout << "Wrong format!" << endl;
-                return;
+                cout << "Wrong format: CREATE " << parameters << '\n';
+                log_in("Wrong format: CREATE " + parameters);
+                continue;
             }
-            if(record_log) {
-                _log << command << ' ' << meanX 
-                                << ' ' << meanY
-                                << ' ' << varianceX
-                                << ' ' << varianceY
-                                << ' ' << N << '\n';
-            }
+            log_in(command + ' '  + to_string(meanX) + ", "
+                                  + to_string(meanY) + ", "
+                                  + to_string(varianceX) + ", "
+                                  + to_string(varianceY) + ", "
+                                  + to_string(N));
+            
             controller.generate_cloud(meanX, meanY, varianceX, varianceY, N);
-        } else if (command == "GC") {
-             if(record_log) 
-                _log << command << '\n';
-            controller.generate_cloud(0., 0., 1., 1., 1000);
         } else if (command == "PRINT") {
-            if(record_log)
-                _log << "HELP" << '\n';
+            log_in(command);
             controller.print_to_file(); 
         } else if (command == "HELP") {
-            if(record_log)
-                _log << "HELP" << '\n';
+            log_in(command);
             help();
         } else if (command == "LOG") {
-            if(record_log)
-                _log << "LOG" << '\n';
-            log();
+            log_in(command);
+            log_out();
+        } else if (command == "END") {
+            break;
+        } else {
+            cout << "Unknown command: " << command << endl;
+            log_in("Unknown command: " + command);
         }
         
     }
 }
 
-void Interface::log() 
+void Interface::log_in(const string& input)
+{
+    if(record_log)
+        _log << input << '\n';
+}
+void Interface::log_out() const
 {
     ofstream out("log.txt");
     out << _log.str();
@@ -91,13 +118,14 @@ void Interface::log()
 void Interface::help() const 
 {
     cout << "Possible commands:\n"
-         << "\tGEN CLOUD <meanX> <meanY> <varianceX> <varianceY> <N>\n"
+         << "\tCREATE <meanX>, <meanY>, <varianceX>, <varianceY>, <N>\n"
          << "\t\tGenerates cloud with listed parameters\n"
-         << "\tGC\n"
-         << "\t\tGenerates cloud with default parameters:\n"
+         << "\t\tIf nothing is listed, generates cloud with default parameters:\n"
          << "\t\tmeanX = 0, meanY = 0, varianceX = 1, varianceY = 1, N = 1'000\n"
          << "\tPRINT\n"
          << "\t\tPrints all data to output.txt\n"
          << "\tLOG\n"
-         << "\t\tLogs all used commands in log.txt\n";
+         << "\t\tLogs all used commands in log.txt\n"
+         << "\tEND\n"
+         << "\t\tEnd of session\n";
 }

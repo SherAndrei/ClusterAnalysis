@@ -10,8 +10,9 @@ public:
         : ID(new_id), record_log(record_rule) {}
     void start();
     void get_command(std::istream& os);
-    void log();
-    void help() const;
+    void log_in(const std::string& inp);
+    void log_out() const;
+    void help()    const;
 private:
     const int ID;
     const bool record_log;
