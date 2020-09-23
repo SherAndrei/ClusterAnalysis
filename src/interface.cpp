@@ -153,19 +153,25 @@ void Interface::log_out() const
 
 void Interface::help() const 
 {
-    cout << "Possible commands:\n"
-         << "\tCREATE <meanX>, <meanY>, <varianceX>, <varianceY>, <N>\n"
-         << "\t\tGenerates cloud with listed parameters\n"
-         << "\t\tIf nothing is listed, generates cloud with default parameters:\n"
-         << "\t\tmeanX = 0, meanY = 0, varianceX = 1, varianceY = 1, N = 1'000\n"
-         << "\tSTARSKY <minX>, <maxX>, <minY>, <maxY>, <N>\n"
-         << "\t\tGenerates cloud evenly distributed on a rectangle [minX;maxX] x [minY;maxY]\n"
-         << "\t\tIf nothing is listed, generates cloud with default parameters:\n"
-         << "\t\tminX = 0, maxX = 1, minY = 0, maxY = 1, N = 1'000\n"
-         << "\tPRINT\n"
-         << "\t\tPrints all data to output.txt\n"
-         << "\tLOG\n"
-         << "\t\tLogs all used commands in log.txt\n"
-         << "\tEND\n"
-         << "\t\tEnd of session\n";
+    ofstream help_f("help.txt");
+    ostringstream os;
+    os << " Please list items with commas. Possible commands:\n"
+       << "\tCREATE <meanX>, <meanY>, <varianceX>, <varianceY>, <N>\n"
+       << "\t\tGenerates cloud with listed parameters\n"
+       << "\t\tIf nothing is listed, generates cloud with default parameters:\n"
+       << "\t\tmeanX = 0, meanY = 0, varianceX = 1, varianceY = 1, N = 1'000\n\n"
+       << "\tSTARSKY <minX>, <maxX>, <minY>, <maxY>, <N>\n"
+       << "\t\tGenerates cloud evenly distributed on a rectangle [minX;maxX] x [minY;maxY]\n"
+       << "\t\tIf nothing is listed, generates cloud with default parameters:\n"
+       << "\t\tminX = 0, maxX = 1, minY = 0, maxY = 1, N = 1'000\n\n"
+       << "\tPRINT\n"
+       << "\t\tPrints all clouds to 'data' folder\n\n"
+       << "\tLOG\n"
+       << "\t\tLogs all used commands in log.txt\n\n"
+       << "\tEND\n"
+       << "\t\tEnd of session\n\n"
+       << "\tTo plot clouds type in command line 'cd data && gnuplot' and then type'load 'plot.p'\n\n";
+
+    cout << os.str();
+    help_f << os.str();
 }

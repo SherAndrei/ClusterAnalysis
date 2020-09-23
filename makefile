@@ -7,6 +7,7 @@ BIN 	:= ./bin
 OBJ 	:= ./obj
 INCLUDE := ./include
 SRC 	:= ./src
+DATA    := ./data
 
 #Compiler features
 CC     := g++
@@ -22,13 +23,13 @@ OBJS := $(patsubst $(SRC)/%.cpp,$(OBJ)/%.o,$(SRCS))
 # $< - the first item in the dependencies list
 # -c flag says to generate the object file
 
-$(EXE): $(OBJS) | $(BIN)
+$(EXE): $(OBJS) | $(BIN) $(DATA)
 	$(CC) $^ -o $@
 
 $(OBJ)/%.o: $(SRC)/%.cpp | $(OBJ)
 	$(CC) -c $< -o $@ $(CFLAGS)
 
-$(BIN) $(OBJ):
+$(BIN) $(OBJ) $(DATA):
 	$(MKDIR) $@
 
 .PHONY: clean debug release
@@ -40,4 +41,4 @@ release: CFLAGS += -DRELEASE -O3
 release: $(EXE)
 
 clean:
-	$(RMDIR) $(OBJ) $(BIN)
+	$(RMDIR) $(OBJ) $(BIN) $(DATA)

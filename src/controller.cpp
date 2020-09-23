@@ -35,8 +35,13 @@ void Controller::starsky(double minX, double maxX, double minY, double maxY, int
 
 void Controller::print_to_file() const
 {
-    ofstream out("output.txt");
-    out << field << '\n';
-    out.close();
+    for(size_t i = 0; i < field.clouds_amount(); i++) {
+        ofstream out("data/cloud" + to_string(i + 1) + ".dat");
+        out << field.clouds[i] << endl;
+        out.close();
+    }
+    ofstream plot("data/plot.p");
+    plot << "plot for [i=1:"<< field.clouds_amount() << "] 'cloud'.i.'.dat' title 'cloud '.i";
+    plot.close();
 }
 
