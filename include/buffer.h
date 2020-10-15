@@ -1,5 +1,5 @@
 #pragma once
-#include "cloud.h"
+#include "cluster.h"
 #include "field.h"
 
 class Buffer
@@ -11,8 +11,8 @@ private:
     Field buff_field = {};
 
 public:
-    void get_cloud(const Cloud& another);
-    void set_cloud(const Cloud& another);
+    void get_cluster(const Cluster& another);
+    void set_cluster(const Cluster& another);
 private:
-    Cloud buff_cloud = {};
+    Cluster buff_cluster = {};
 };

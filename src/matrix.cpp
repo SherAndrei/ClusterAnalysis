@@ -39,6 +39,15 @@ double Matrix::At(int row, int column) const {
     return elements_.at(row).at(column);
 }
 
+vector<double>& Matrix::operator[](size_t row)
+{
+	return elements_[row];
+}
+const vector<double>& Matrix::operator[](size_t row) const
+{
+	return elements_[row];
+}
+
 size_t Matrix::NumRows() const {
     return num_rows_;
   }

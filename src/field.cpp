@@ -2,9 +2,9 @@
 #include "field.h"
 using namespace std;
 
-size_t Field::clouds_amount() const
+size_t Field::clusters_amount() const
 {
-    return clouds.size();
+    return clusters.size();
 }
 size_t Field::points_amount() const
 {
@@ -13,8 +13,8 @@ size_t Field::points_amount() const
 
 ostream& operator<<(ostream& os,const Field& f)
 {
-    for(const auto& cloud : f.clouds)
-        os << cloud << '\n';
+    for(const auto& cluster : f.clusters)
+        os << cluster << '\n';
     
     return os;
 }

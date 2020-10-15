@@ -6,16 +6,16 @@
 class Interface
 {
 public:
-    Interface(int new_id = 1, bool record_rule = true)
-        : ID(new_id), record_log(record_rule) {}
+    Interface(int new_id, bool record_rule);
     void start();
     void get_command(std::istream& os);
     void log_in(const std::string& inp);
     void log_out() const;
     void help()    const;
+
 private:
-    const int ID;
-    const bool record_log;
+    const int  ID = 1;
+    const bool record_log = true;
     std::ostringstream _log = {};
     Controller controller;
 };
