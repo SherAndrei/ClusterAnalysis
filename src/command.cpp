@@ -28,8 +28,8 @@ void PrintToken::Evaluate(Controller& ctrl) const
     }
 }
 
-CreateToken::CreateToken(ENTITY e, const std::vector<double>& params, int points_num) 
-    : _e(e), _parameters(params), _N(points_num) {}
+CreateToken::CreateToken(ENTITY e, const std::vector<double>& params) 
+    : _e(e), _parameters(params), _N(params.back()) {}
 void CreateToken::Evaluate(Controller& ctrl)  const
 {
     switch (_e)
@@ -53,4 +53,12 @@ UtilsToken::UtilsToken(UTILS u) : _u(u) {}
 void UtilsToken::Evaluate(Controller& ctrl) const
 {
     (void) ctrl;
+    switch (_u)
+    {
+    case UTILS::HELP: throw 1;
+    case UTILS::LOG:  throw 2;
+    case UTILS::END:  throw 3;    
+    default:
+        break;
+    }
 }

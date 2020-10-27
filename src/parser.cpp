@@ -4,10 +4,9 @@
 #include <sstream>
 #include <exception>
 
-std::pair<std::vector<double>, int> parse_parameters(std::istringstream& iss, size_t params_num)
+std::vector<double> parse_parameters(std::istringstream& iss, size_t params_num)
 {
-    std::vector<double> p(params_num - 1);
-    int n = 0;
+    std::vector<double> p(params_num);
     double current;
     
     for(size_t i = 0; i < params_num - 1; i++) {
@@ -22,13 +21,15 @@ std::pair<std::vector<double>, int> parse_parameters(std::istringstream& iss, si
     }
 
     iss >> std::ws; //убрали пробелы
-    if(iss.peek() != EOF)
-        iss >> n;
+    if(iss.peek() != EOF) {
+        iss >> current;
+        p[params_num - 1] = current;
+    } else p[params_num - 1] = 0.;
 
     // смотрим что дальше
     iss >> std::ws; //убрали пробелы
     if(iss.eof())
-        return {p, n};
+        return p;
     
     throw std::logic_error("Bad parameters! Use HELP"); 
     return {};
@@ -47,10 +48,10 @@ std::shared_ptr<Token> parse(const std::string& command)
         ok = ok && (iss >> word);
         if(ok && word == "CLOUD") {
             auto params = parse_parameters(iss, 5);
-            return std::make_shared<CreateToken>(ENTITY::CLOUD, params.first, params.second);
+            return std::make_shared<CreateToken>(ENTITY::CLOUD, params);
         } else if (ok && word == "STARSKY") {
             auto params = parse_parameters(iss, 5);
-            return std::make_shared<CreateToken>(ENTITY::STARSKY, params.first, params.second);
+            return std::make_shared<CreateToken>(ENTITY::STARSKY, params);
         } else {
             throw std::logic_error("Bad create! Use HELP"); 
         }
@@ -67,8 +68,8 @@ std::shared_ptr<Token> parse(const std::string& command)
     } else if (ok && word == "ALG") {
         ok = ok && (iss >> word);
         if (ok && word == "WAVE") {
-            auto params = parse_parameters(iss, 2);
-            return std::make_shared<ExeAlgorithmToken>(ALG::WAVE, params.first);
+            auto params = parse_parameters(iss, 1);
+            return std::make_shared<ExeAlgorithmToken>(ALG::WAVE, params);
         } else {
             throw std::logic_error("Bad alg! Use HELP"); 
         }

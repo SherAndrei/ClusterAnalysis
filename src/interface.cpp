@@ -51,7 +51,15 @@ void Interface::get_command(istream& is)
             token->Evaluate(controller);
         } catch (const std::logic_error& ex) {
             std::cout << ex.what() << std::endl;
-        
+        } catch (int cmd) {
+            switch (cmd)
+            {
+            case 1: help(); break;
+            case 2: log_out(); break;
+            }
+            if(cmd == 3) {
+                break;
+            }
         }
     }
 }

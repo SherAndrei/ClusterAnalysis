@@ -45,7 +45,7 @@ enum class ENTITY
 class CreateToken : public Token
 {
 public: 
-    CreateToken(ENTITY e, const std::vector<double>& params, int points_num);
+    CreateToken(ENTITY e, const std::vector<double>& params);
     void Evaluate(Controller& ctrl) const override;
 private:
     ENTITY _e;
