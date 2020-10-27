@@ -9,9 +9,9 @@ public:
     Controller() = default;
 
 //Generators
-    void cluster(double meanX, double meanY, double varianceX, double varianceY, int N);
+    void cloud(double meanX, double meanY, double varianceX, double varianceY, int N);
     void starsky(double minX, double maxX, double minY, double maxY, int N);
-    void print_to_file() const;
+    void print(ALG l) const;
 
 //Searchers
 	void wave(double d);

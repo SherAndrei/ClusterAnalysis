@@ -14,8 +14,8 @@ public:
   	double& At(int row, int column);
   	double At(int row, int column) const;
 	
-  	vector<double>& operator[](size_t row);
-  	const vector<double>& operator[](size_t row) const;
+  	std::vector<double>& operator[](size_t row);
+  	const std::vector<double>& operator[](size_t row) const;
 
   	size_t NumRows() const;
   	size_t NumColumns() const;

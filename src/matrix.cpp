@@ -57,19 +57,19 @@ size_t Matrix::NumColumns() const {
 }
 
 bool operator==(const Matrix& one, const Matrix& two) {
-  if ((one.NumRows() != two.NumRows()) && (one.NumColumns() != two.NumColumns())) {
-    return false;
-  }
-
-  for (int row = 0; row < one.NumRows(); ++row) {
-    for (int column = 0; column < one.NumColumns(); ++column) {
-      if (one.At(row, column) != two.At(row, column)) {
+    if ((one.NumRows() != two.NumRows()) && (one.NumColumns() != two.NumColumns())) {
         return false;
-      }
     }
-  }
+    size_t row, column;
+    for (row = 0u; row < one.NumRows(); ++row) {
+        for (column = 0u; column < one.NumColumns(); ++column) {
+            if (one.At(row, column) != two.At(row, column)) {
+                return false;
+            }
+        }
+    }
 
-  return true;
+return true;
 }
 
 Matrix operator+(const Matrix& one, const Matrix& two) {
@@ -82,8 +82,9 @@ Matrix operator+(const Matrix& one, const Matrix& two) {
   }
 
   Matrix result(one.NumRows(), one.NumColumns());
-  for (int row = 0; row < result.NumRows(); ++row) {
-    for (int column = 0; column < result.NumColumns(); ++column) {
+  size_t row, column;
+  for (row = 0u; row < result.NumRows(); ++row) {
+    for (column = 0u; column < result.NumColumns(); ++column) {
       result.At(row, column) = one.At(row, column) + two.At(row, column);
     }
   }
@@ -107,8 +108,9 @@ istream& operator>>(istream& in, Matrix& matrix) {
 
 ostream& operator<<(ostream& out, const Matrix& matrix) {
   out << matrix.NumRows() << " " << matrix.NumColumns() << endl;
-  for (int row = 0; row < matrix.NumRows(); ++row) {
-    for (int column = 0; column < matrix.NumColumns(); ++column) {
+  size_t row, column;
+  for (row = 0u; row < matrix.NumRows(); ++row) {
+    for (column = 0u; column < matrix.NumColumns(); ++column) {
       if (column > 0) {
         out << " ";
       }

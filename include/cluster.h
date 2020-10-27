@@ -6,10 +6,10 @@
 class Cluster
 {
 public:
-    Cluster();
+    Cluster() = default;
 	void add(const Point& p);
 
-	const vector<Point>& points() const;
+	const std::vector<Point>& points() const;
 	
 private:
     std::vector<Point> _points;

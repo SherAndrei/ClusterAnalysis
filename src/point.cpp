@@ -47,6 +47,9 @@ Point Point::operator - (const Point& other) const
 	return {this->_x - other._x, this->_y - other._y};	
 }
 
+double Point::x() const { return _x; }
+double Point::y() const { return _y; }
+
 double distance(const Point& p1, const Point& p2)
 {
     return sqrt((p1.x() - p2.x()) * (p1.x() - p2.x()) + (p1.y() - p2.y()) * (p1.y() - p2.y()));

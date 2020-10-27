@@ -2,20 +2,20 @@
 #include <set>
 #include <stack>
 #include "algorithms/WaveAlgorithm.h"
-#include "matrix.h"
+#include "cluster.h"
 
 using namespace std;
+
+WaveAlgorithm::WaveAlgorithm(double delta)
+    : Searcher(), _delta(delta)
+    {}
 
 void WaveAlgorithm::find(const vector<Point>& points) {
     Matrix matrix(points.size(), points.size());
 
     for (size_t i = 0; i < points.size(); ++i) {
-            for (size_t j = 0; j < points.size(); ++j) {
-                if (distance(points[i],points[j]) < _delta){
-                    matrix[i][j] = 1;
-                }
-                else matrix[i][j] = 0;
-            }
+            for (size_t j = 0; j < points.size(); ++j)
+                matrix[i][j] = (distance(points[i],points[j]) < _delta);
     }
     set<int> used;
 
