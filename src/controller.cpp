@@ -1,8 +1,11 @@
+#include "algorithms/WaveAlgorithm.h"
+#include "algorithms/DBScanAlgorithm.h"
 #include "controller.h"
-#include "cloud.h"
+#include "cluster.h"
 #include "field.h"
 #include <random>
 #include <fstream>
+#include "token.h"
 
 using namespace std;
 
@@ -13,35 +16,54 @@ void Controller::cloud(double meanX, double meanY, double varianceX, double vari
 {
     normal_distribution<> for_x(meanX, varianceX);
     normal_distribution<> for_y(meanY, varianceY);
-    Cloud result;
     for(int i = 0; i < N; ++i)
-        result.points.push_back({for_x(gen), for_y(gen)});
-
-    field.N_points += N;
-    field.clouds.push_back(result);
+        field.points.push_back({for_x(gen), for_y(gen)});
 }
 
 void Controller::starsky(double minX, double maxX, double minY, double maxY, int N)
 {
     uniform_real_distribution<double> for_x(minX, maxX);
     uniform_real_distribution<double> for_y(minY, maxY);
-    Cloud result;
     for(int i = 0; i < N; ++i)
-        result.points.push_back({for_x(gen), for_y(gen)});
-
-    field.N_points += N;
-    field.clouds.push_back(result);
+        field.points.push_back({for_x(gen), for_y(gen)});
 }
 
-void Controller::print_to_file() const
+void Controller::print(ALG alg) const
 {
-    for(size_t i = 0; i < field.clouds_amount(); i++) {
-        ofstream out("data/cloud" + to_string(i + 1) + ".dat");
-        out << field.clouds[i] << endl;
-        out.close();
+    ofstream file;
+    switch (alg)
+    {
+    case ALG::NO_ALG: {
+        file.open("data/alldata.dat");
+        for(size_t i = 0; i < field.points.size(); i++) {
+            file << field.points[i] << endl;
+        } 
+        file.close();
+        break;
+    }  
+    default: 
+        if(field.searchers.count(alg)) {
+            auto& new_clusters = field.searchers.at(alg)->clusters();
+            for(size_t i = 0; i < new_clusters.size(); i++) {
+                file.open("data/" + to_string(alg) + "/cluster" + to_string(i + 1) + ".dat");
+                file << new_clusters[i];
+                file.close();
+            }
+        } 
+        break;
     }
-    ofstream plot("data/plot.p");
-    plot << "plot for [i=1:"<< field.clouds_amount() << "] 'cloud'.i.'.dat' title 'cloud '.i";
-    plot.close();
 }
 
+void Controller::wave(double d)
+{
+    auto wave = std::make_shared<WaveAlgorithm>(d);
+    wave->find(field.points);
+    field.searchers[ALG::WAVE] = wave;
+}
+
+void Controller::dbscan(double D, int K)
+{
+    auto dbscan = std::make_shared<DBScanAlgorithm>(D, K);
+    dbscan->find(field.points);
+    field.searchers[ALG::DBSCAN] = dbscan;
+}
