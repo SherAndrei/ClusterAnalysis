@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 #include <memory>
-#include "searcher.h"
+#include "clustersearcher.h"
 #include "cluster.h"
 
 // forward declaration
@@ -18,7 +18,7 @@ public:
 
 public:
     std::vector<Point> points;
-    std::map<ALG, std::shared_ptr<Searcher>> searchers;
+    std::map<ALG, std::shared_ptr<ClusterSearcher>> searchers;
 };
 
 std::ostream& operator << (std::ostream& os, const Field& f);

@@ -4,40 +4,26 @@
 #include <sstream>
 #include <exception>
 
-static std::vector<double> parse_parameters(std::istringstream& iss, size_t params_num)
+static std::vector<std::string> parse_parameters(std::istringstream& iss, size_t params_num)
 {
-    std::vector<double> p(params_num);
-    double current;
-    
-    for(size_t i = 0; i < params_num - 1; i++) {
-        iss >> std::ws; //убрали пробелы
-        if(iss.peek() != ',') {
-            iss >> current;
-            p[i] = current;
-        } else p[i] = 0.;
-        iss.ignore(1);
-        if(iss.fail())
-            throw std::logic_error("Bad parameters! Use HELP");
+    std::vector<std::string> p(params_num);
+    std::string current;
+    size_t counter = 0u;
+
+    while(iss >> current) {
+        if(counter < params_num)
+            p[counter] = current;
+        counter++;
     }
 
-    iss >> std::ws; //убрали пробелы
-    if(iss.peek() != EOF) {
-        iss >> current;
-        p[params_num - 1] = current;
-    } else p[params_num - 1] = 0.;
-
-    // смотрим что дальше
-    iss >> std::ws; //убрали пробелы
-    if(iss.eof())
-        return p;
+    if(counter != params_num)
+        throw std::logic_error("Bad parameters! Use HELP"); 
     
-    throw std::logic_error("Bad parameters! Use HELP"); 
-    return {};
+    return p;
 }
 
 std::shared_ptr<Token> parse(const std::string& command)
 {
-    std::vector<std::shared_ptr<Token>> result;
     std::istringstream iss(command);
     std::string word;
     bool ok = true;
@@ -58,28 +44,23 @@ std::shared_ptr<Token> parse(const std::string& command)
     } else if (ok && word == "PRINT") {
         // считываем следующее слово
         ok = ok && (iss >> word);
-        if(ok && word == "ALLPOINTS") {
-            return std::make_shared<PrintToken>(ALG::NO_ALG);
-        } else if (ok && word == "WAVE") {
-            return std::make_shared<PrintToken>(ALG::WAVE);
-        } else {
+        if(ok)
+            return std::make_shared<PrintToken>(stoalg(word)); 
+        else 
             throw std::logic_error("Bad print! Use HELP"); 
-        }
     } else if (ok && word == "ALG") {
         ok = ok && (iss >> word);
         if (ok && word == "WAVE") {
             auto params = parse_parameters(iss, 1);
             return std::make_shared<ExeAlgorithmToken>(ALG::WAVE, params);
-        } else {
+        } else if (ok && word == "DBSCAN") {
+            auto params = parse_parameters(iss, 2);
+            return std::make_shared<ExeAlgorithmToken>(ALG::DBSCAN, params);
+        } else
             throw std::logic_error("Bad alg! Use HELP"); 
-        }
     }
-    else if (ok && word == "HELP")
-        return std::make_shared<UtilsToken>(UTILS::HELP);
-    else if (ok && word == "LOG")
-        return std::make_shared<UtilsToken>(UTILS::LOG);
-    else if (ok && word == "END")
-        return std::make_shared<UtilsToken>(UTILS::END);
+    else if (ok)
+        return std::make_shared<UtilsToken>(stoutils(word));
 
     throw std::logic_error("Bad input! Use HELP");
     return std::make_shared<EmptyToken>();

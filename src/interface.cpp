@@ -43,14 +43,14 @@ void Interface::get_command(istream& is)
 {
     string command, first_word;
     istringstream iss;
-    is.get();
+    if(is.peek() == '\n') is.get();
     while(getline(is, command))
     {   
         logger.log(command);
         try {
             auto token = parse(command);
             token->Evaluate(controller);
-        } catch (const std::logic_error& ex) {
+        } catch (const std::exception& ex) {
             std::cout << ex.what() << std::endl;
             logger.log(ex.what());
         } catch (int cmd) {

@@ -13,17 +13,21 @@ struct Token {
 
 enum class ALG
 {
-    NO_ALG = -1,
+    UNKNOWN = -1,
+    NO_ALG,
     WAVE,
     DBSCAN
 };
 
+std::string to_string(ALG alg);
+ALG stoalg(const std::string& ald);
+
 class ExeAlgorithmToken : public Token
 {
     ALG _alg;
-    std::vector<double> _params;
+    std::vector<std::string> _params;
 public:
-    ExeAlgorithmToken(ALG num, std::vector<double> params);
+    ExeAlgorithmToken(ALG num, std::vector<std::string> params);
     void Evaluate(Controller& ctrl) const override;
 };
 
@@ -45,12 +49,11 @@ enum class ENTITY
 class CreateToken : public Token
 {
 public: 
-    CreateToken(ENTITY e, const std::vector<double>& params);
+    CreateToken(ENTITY e, const std::vector<std::string>& params);
     void Evaluate(Controller& ctrl) const override;
 private:
     ENTITY _e;
-    std::vector<double> _parameters;
-    int _N;
+    std::vector<std::string> _parameters;
 };
 
 enum class UTILS
@@ -60,6 +63,8 @@ enum class UTILS
     LOG,
     END
 };
+
+UTILS stoutils(const std::string& ut);
 
 class UtilsToken : public Token
 {

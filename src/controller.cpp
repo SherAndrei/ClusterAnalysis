@@ -1,4 +1,5 @@
 #include "algorithms/WaveAlgorithm.h"
+#include "algorithms/DBScanAlgorithm.h"
 #include "controller.h"
 #include "cluster.h"
 #include "field.h"
@@ -39,18 +40,16 @@ void Controller::print(ALG alg) const
         } 
         file.close();
         break;
-    }
-    case ALG::WAVE: {
-        if(field.searchers.count(ALG::WAVE)) {
-            auto& new_clusters = field.searchers.at(ALG::WAVE)->clusters;
+    }  
+    default: 
+        if(field.searchers.count(alg)) {
+            auto& new_clusters = field.searchers.at(alg)->clusters();
             for(size_t i = 0; i < new_clusters.size(); i++) {
-                file.open("data/WaveAlgorithm/cluster" + to_string(i + 1) + ".dat");
+                file.open("data/" + to_string(alg) + "/cluster" + to_string(i + 1) + ".dat");
                 file << new_clusters[i];
                 file.close();
             }
-        }
-    }    
-    default:
+        } 
         break;
     }
 }
@@ -62,3 +61,9 @@ void Controller::wave(double d)
     field.searchers[ALG::WAVE] = wave;
 }
 
+void Controller::dbscan(double D, int K)
+{
+    auto dbscan = std::make_shared<DBScanAlgorithm>(D, K);
+    dbscan->find(field.points);
+    field.searchers[ALG::DBSCAN] = dbscan;
+}

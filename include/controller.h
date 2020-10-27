@@ -1,6 +1,6 @@
 #pragma once
 #include "field.h"
-#include "searcher.h"
+#include "clustersearcher.h"
 #include <string>
 
 class Controller
@@ -14,7 +14,8 @@ public:
     void print(ALG l) const;
 
 //Searchers
-	void wave(double d);
+	void wave(double delta);
+	void dbscan(double D, int K);
 
 private:
     Field field;
