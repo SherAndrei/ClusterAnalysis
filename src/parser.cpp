@@ -4,7 +4,7 @@
 #include <sstream>
 #include <exception>
 
-std::vector<double> parse_parameters(std::istringstream& iss, size_t params_num)
+static std::vector<double> parse_parameters(std::istringstream& iss, size_t params_num)
 {
     std::vector<double> p(params_num);
     double current;

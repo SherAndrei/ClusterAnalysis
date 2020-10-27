@@ -1,4 +1,4 @@
-#include "command.h"
+#include "token.h"
 
 
 ExeAlgorithmToken::ExeAlgorithmToken(ALG num, std::vector<double> params) : _alg(num), _params(params) {}

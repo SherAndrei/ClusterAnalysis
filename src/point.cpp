@@ -30,14 +30,6 @@ Point& Point::operator /= (const Point& other)
 	return *this;
 }
 
-bool  Point::operator == (const Point& b) const
-{
-	return (this->_x == b._x) && (this->_y == b._y);
-}
-bool  Point::operator != (const Point& b) const
-{
-	return !(*this == b);
-}
 Point Point::operator + (const Point& other) const
 {
 	return {this->_x + other._x, this->_y + other._y};

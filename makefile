@@ -19,7 +19,11 @@ DATAALGS := $(patsubst ${HDRALGS}/%.h, ${DATA}/%, ${HDRSALGS})
 
 #Compiler features
 CC     := g++
-CFLAGS := -Werror -Wextra -Wpedantic -Wall -I$(HDR) -I${HDRALGS}
+CFLAGS := -mfpmath=sse -fstack-protector-all -W -Wall -Wextra -Wunused -Wcast-align \
+		  -Werror -pedantic -pedantic-errors -Wfloat-equal -Wpointer-arith -Wformat-security \
+		  -Wmissing-format-attribute -Wformat=1 -Wwrite-strings -Wcast-align -Wno-long-long  \
+		  -Wcast-qual -Wno-suggest-attribute=format -Wpedantic \
+		  -Wmissing-declarations -I$(HDR) -I${HDRALGS}
 
 #Variables
 EXE  := $(BIN)/main

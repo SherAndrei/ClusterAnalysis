@@ -4,7 +4,7 @@
 #include "field.h"
 #include <random>
 #include <fstream>
-#include "command.h"
+#include "token.h"
 
 using namespace std;
 

@@ -2,6 +2,6 @@
 
 #include <vector>
 #include <memory>
-#include "command.h"
+#include "token.h"
 
 std::shared_ptr<Token> parse(const std::string& command);

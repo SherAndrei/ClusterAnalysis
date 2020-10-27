@@ -45,12 +45,14 @@ void Interface::get_command(istream& is)
     istringstream iss;
     is.get();
     while(getline(is, command))
-    {
+    {   
+        logger.log(command);
         try {
             auto token = parse(command);
             token->Evaluate(controller);
         } catch (const std::logic_error& ex) {
             std::cout << ex.what() << std::endl;
+            logger.log(ex.what());
         } catch (int cmd) {
             switch (cmd)
             {
@@ -64,15 +66,10 @@ void Interface::get_command(istream& is)
     }
 }
 
-void Interface::log_in(const string& input)
-{
-    if(record_log)
-        _log << input << '\n';
-}
 void Interface::log_out() const
 {
     ofstream out("log.txt");
-    out << _log.str();
+    out << logger.str();
     out.close();
 }
 

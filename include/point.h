@@ -11,9 +11,6 @@ public:
 	Point& operator += (const Point& other);
 	Point& operator /= (const Point& other);
 
-	bool   operator == (const Point& b) const;
-	bool   operator != (const Point& b) const;
-
 	Point operator + (const Point& other) const;
 	Point operator - (const Point& other) const;
 

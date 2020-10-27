@@ -11,7 +11,7 @@ WaveAlgorithm::WaveAlgorithm(double delta)
     {}
 
 void WaveAlgorithm::find(const vector<Point>& points) {
-    Matrix matrix(points.size(), points.size());
+    Matrix<int> matrix(points.size(), points.size());
 
     for (size_t i = 0; i < points.size(); ++i) {
             for (size_t j = 0; j < points.size(); ++j)
@@ -28,7 +28,7 @@ void WaveAlgorithm::find(const vector<Point>& points) {
             int cur = stack.top();
             stack.pop();
             for (size_t j = 0; j < points.size(); ++j) {
-                if (matrix[cur][j] && used.count(j) == 0) {
+                if ((matrix[cur][j] == 1) && (used.count(j) == 0u)) {
                     used.insert(j);
                     cluster.add(points[j]);
                     stack.push(j);
