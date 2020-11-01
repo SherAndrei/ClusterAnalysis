@@ -3,29 +3,67 @@
 #include "controller.h"
 #include "cluster.h"
 #include "field.h"
-#include <random>
 #include <fstream>
-#include "token.h"
 
-using namespace std;
-
-static random_device rd;
-static mt19937 gen(rd());
-
-void Controller::cloud(double meanX, double meanY, double varianceX, double varianceY, int N)
+void Controller::generate(ENTITY en, const std::vector<std::string>& params)
 {
-    normal_distribution<> for_x(meanX, varianceX);
-    normal_distribution<> for_y(meanY, varianceY);
-    for(int i = 0; i < N; ++i)
-        field.points.push_back({for_x(gen), for_y(gen)});
+    if(mode != MODE::GENERATE) {
+        throw std::logic_error("Cannot generate in not generate mode!");
+    }
+    switch (en)
+    {
+    case ENTITY::CLOUD: {
+        double meanX = stod(params[0]);
+        double meanY = stod(params[1]);
+        double varX  = stod(params[2]);
+        double varY  = stod(params[3]);
+        int N        = stoi(params[4]);
+        if(N < 0)
+            throw std::out_of_range("Bad amount of points!" + params[4]);
+        cg.cloud(meanX, meanY, varX, varY, N);
+        break;
+    }
+    case ENTITY::STARSKY: {
+        double minX = stod(params[0]);
+        double maxX = stod(params[1]);
+        double minY = stod(params[2]);
+        double maxY = stod(params[3]);
+        int N       = stoi(params[4]);
+        if(N < 0)
+            throw std::out_of_range("Bad amount of points!" + params[4]);
+        cg.starsky(minX, maxX, minY, maxY, N);    
+        break;
+    }
+    default:
+        break;
+    }
 }
 
-void Controller::starsky(double minX, double maxX, double minY, double maxY, int N)
+void Controller::search(ALG alg, const std::vector<std::string>& params)
 {
-    uniform_real_distribution<double> for_x(minX, maxX);
-    uniform_real_distribution<double> for_y(minY, maxY);
-    for(int i = 0; i < N; ++i)
-        field.points.push_back({for_x(gen), for_y(gen)});
+    if(mode != MODE::SEARCH) {
+        throw std::logic_error("Cannot search in not search mode!");
+    }
+
+    std::shared_ptr<ClusterSearcher> sh_alg;
+    switch (alg)
+    {
+    case ALG::WAVE: {
+        double d = stod(params[0]);
+        sh_alg = std::make_shared<WaveAlgorithm>(d);
+        break;
+    }
+    case ALG::DBSCAN: {
+        double D = stod(params[0]);
+        int K    = stoi(params[1]);
+        sh_alg = std::make_shared<DBScanAlgorithm>(D, K);
+        break;
+    }
+    default:
+        break;
+    }
+    sh_alg->find(field.points);
+    field.searchers[alg] = sh_alg;
 }
 
 void Controller::print(ALG alg) const
@@ -35,9 +73,8 @@ void Controller::print(ALG alg) const
     {
     case ALG::NO_ALG: {
         file.open("data/alldata.dat");
-        for(size_t i = 0; i < field.points.size(); i++) {
-            file << field.points[i] << endl;
-        } 
+        for(const auto& cluster : cg.clusters())
+            file << cluster;
         file.close();
         break;
     }  
@@ -54,16 +91,24 @@ void Controller::print(ALG alg) const
     }
 }
 
-void Controller::wave(double d)
+void Controller::setup(MODE m) 
 {
-    auto wave = std::make_shared<WaveAlgorithm>(d);
-    wave->find(field.points);
-    field.searchers[ALG::WAVE] = wave;
-}
-
-void Controller::dbscan(double D, int K)
-{
-    auto dbscan = std::make_shared<DBScanAlgorithm>(D, K);
-    dbscan->find(field.points);
-    field.searchers[ALG::DBSCAN] = dbscan;
+    if(m == mode)
+        return;
+    switch (m)
+    {
+    case MODE::GENERATE:
+        field.searchers.clear();
+        break;
+    case MODE::SEARCH:
+        for(const auto& cluster : cg.clusters()) {
+            for(const auto& point : cluster.points()) {
+                field.points.push_back(point);
+            }
+        }
+        break;
+    default:
+        return;
+    }
+    mode = m;
 }

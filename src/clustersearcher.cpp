@@ -13,7 +13,7 @@ void ClusterSearcher::reconfigure_distances(const std::vector<Point>& points)
     }
 }
 
-const std::vector<Cluster> ClusterSearcher::clusters() const { return _clusters; }
+std::vector<Cluster>  ClusterSearcher::clusters() const { return _clusters; }
 std::vector<Cluster>& ClusterSearcher::clusters() { return _clusters; }
 
 void ClusterSearcher::set_delta(double d) { delta = d; }

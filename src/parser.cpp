@@ -29,17 +29,17 @@ std::shared_ptr<Token> parse(const std::string& command)
     bool ok = true;
     //находим первое слово
     ok = ok && (iss >> word);
-    if(ok && word == "CREATE") {
+    if(ok && word == "GENERATE") {
         // считываем следующее слово
         ok = ok && (iss >> word);
         if(ok && word == "CLOUD") {
             auto params = parse_parameters(iss, 5);
-            return std::make_shared<CreateToken>(ENTITY::CLOUD, params);
+            return std::make_shared<GenerateToken>(ENTITY::CLOUD, params);
         } else if (ok && word == "STARSKY") {
             auto params = parse_parameters(iss, 5);
-            return std::make_shared<CreateToken>(ENTITY::STARSKY, params);
+            return std::make_shared<GenerateToken>(ENTITY::STARSKY, params);
         } else {
-            throw std::logic_error("Bad create! Use HELP"); 
+            throw std::logic_error("Bad generate! Use HELP"); 
         }
     } else if (ok && word == "PRINT") {
         // считываем следующее слово
@@ -48,18 +48,24 @@ std::shared_ptr<Token> parse(const std::string& command)
             return std::make_shared<PrintToken>(stoalg(word)); 
         else 
             throw std::logic_error("Bad print! Use HELP"); 
-    } else if (ok && word == "ALG") {
+    } else if (ok && word == "SEARCH") {
         ok = ok && (iss >> word);
         if (ok && word == "WAVE") {
             auto params = parse_parameters(iss, 1);
-            return std::make_shared<ExeAlgorithmToken>(ALG::WAVE, params);
+            return std::make_shared<SearchToken>(ALG::WAVE, params);
         } else if (ok && word == "DBSCAN") {
             auto params = parse_parameters(iss, 2);
-            return std::make_shared<ExeAlgorithmToken>(ALG::DBSCAN, params);
+            return std::make_shared<SearchToken>(ALG::DBSCAN, params);
         } else
-            throw std::logic_error("Bad alg! Use HELP"); 
+            throw std::logic_error("Bad search! Use HELP"); 
+    } else if (ok && word == "MODE") {
+        // считываем следующее слово
+        ok = ok && (iss >> word);
+        if(ok)
+            return std::make_shared<ModeToken>(stomode(word));
+        else throw std::logic_error("Bad mode! Use HELP"); 
     }
-    else if (ok)
+    else if (ok && (word == "HELP" || word == "LOG" || word == "END"))
         return std::make_shared<UtilsToken>(stoutils(word));
 
     throw std::logic_error("Bad input! Use HELP");

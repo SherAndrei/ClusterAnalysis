@@ -1,8 +1,6 @@
 #pragma once
 #include "logger.h"
 #include "controller.h"
-#include <iostream>
-#include <sstream>
 
 class Interface
 {

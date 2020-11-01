@@ -15,14 +15,12 @@ void Interface::start()
     cin >> from_file;
     switch (from_file)
     {
-    case 0:
-    {
+    case 0: {
         cout << "Enter commands here:" << endl;
         get_command(cin);
         break;
     }
-    case 1:
-    {
+    case 1: {
         string filename;
         cout << "Enter filename:" << endl;
         cin >> filename;
@@ -53,15 +51,16 @@ void Interface::get_command(istream& is)
         } catch (const std::exception& ex) {
             std::cout << ex.what() << std::endl;
             logger.log(ex.what());
-        } catch (int cmd) {
+        } catch (UTILS cmd) {
             switch (cmd)
             {
-            case 1: help(); break;
-            case 2: log_out(); break;
-            }
-            if(cmd == 3) {
+            case UTILS::HELP: help(); break;
+            case UTILS::LOG: log_out(); break;
+            default:
                 break;
             }
+            if(cmd == UTILS::END)
+                break;
         }
     }
 }
@@ -70,29 +69,34 @@ void Interface::log_out() const
 {
     ofstream out("log.txt");
     out << logger.str();
-    out.close();
 }
 
 void Interface::help() const 
 {
     ofstream help_f("help.txt");
     ostringstream os;
-    os << " Please list items with commas. Possible commands:\n"
-       << "\tCREATE <meanX>, <meanY>, <varianceX>, <varianceY>, <N>\n"
-       << "\t\tGenerates cluster with listed parameters\n"
-       << "\t\tIf nothing is listed, generates cluster with default parameters:\n"
-       << "\t\tmeanX = 0, meanY = 0, varianceX = 1, varianceY = 1, N = 1'000\n\n"
-       << "\tSTARSKY <minX>, <maxX>, <minY>, <maxY>, <N>\n"
-       << "\t\tGenerates cluster evenly distributed on a rectangle [minX;maxX] x [minY;maxY]\n"
-       << "\t\tIf nothing is listed, generates cluster with default parameters:\n"
-       << "\t\tminX = 0, maxX = 1, minY = 0, maxY = 1, N = 1'000\n\n"
-       << "\tPRINT\n"
-       << "\t\tPrints all clusters to 'data' folder\n\n"
+    os << "Usage:\n"
+       << "\tSETUP <mode>\n"
+       << "\tSetup mode for working with field:\n"
+       << "\t\tMode usage:\n"
+       << "\t\tGENERATE\n"
+       << "\t\tSEARCH\n"
+       << "\tGENERATE <entity> ...params\n"
+       << "\tGenerates cluster - entity - with listed parameters\n"
+       << "\t\tEntity usage: \n"
+       << "\t\tCLOUD   <meanX> <meanY> <varianceX> <varianceY> <N> \n"
+       << "\t\tSTARSKY <minX> <maxX> <minY> <maxY> <N>\n"
+       << "\tSEARCH <algorithm> ...params\n"
+       << "\tSearch clusters with algorithm\n"
+       << "\t\tAlogrithm usage:\n"
+       << "\t\tWAVE <delta>\n"
+       << "\t\tDBSCAN <D> <K>\n"
+    //    << "\tPRINT\n"
+    //    << "\t\tPrints all clusters to 'data' folder\n\n"
        << "\tLOG\n"
        << "\t\tLogs all used commands in log.txt\n\n"
        << "\tEND\n"
-       << "\t\tEnd of session\n\n"
-       << "\tTo plot clusters type in command line 'cd data && gnuplot' and then type'load 'plot.p'\n\n";
+       << "\t\tEnd of session\n\n";
 
     cout << os.str();
     help_f << os.str();

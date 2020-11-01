@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <memory>
 #include "controller.h"
+#include <vector>
+
+class Controller;
 
 using namespace std;
 
@@ -22,12 +22,12 @@ enum class ALG
 std::string to_string(ALG alg);
 ALG stoalg(const std::string& ald);
 
-class ExeAlgorithmToken : public Token
+class SearchToken : public Token
 {
     ALG _alg;
     std::vector<std::string> _params;
 public:
-    ExeAlgorithmToken(ALG num, std::vector<std::string> params);
+    SearchToken(ALG num, const std::vector<std::string>& params);
     void Evaluate(Controller& ctrl) const override;
 };
 
@@ -46,10 +46,10 @@ enum class ENTITY
     STARSKY
 };
 
-class CreateToken : public Token
+class GenerateToken : public Token
 {
 public: 
-    CreateToken(ENTITY e, const std::vector<std::string>& params);
+    GenerateToken(ENTITY e, const std::vector<std::string>& params);
     void Evaluate(Controller& ctrl) const override;
 private:
     ENTITY _e;
@@ -71,6 +71,24 @@ class UtilsToken : public Token
     UTILS _u;
 public:
     UtilsToken(UTILS u);
+    void Evaluate(Controller& ctrl) const override;
+};
+
+
+enum class MODE
+{
+    UNKNOWN = -1,
+    GENERATE,
+    SEARCH
+};
+
+MODE stomode(const std::string& mo);
+
+class ModeToken : public Token
+{
+    MODE _m;
+public:
+    ModeToken(MODE m);
     void Evaluate(Controller& ctrl) const override;
 };
 

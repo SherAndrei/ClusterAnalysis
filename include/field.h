@@ -1,10 +1,10 @@
 #pragma once
-#include <iostream>
+#include <ostream>
 #include <vector>
 #include <map>
 #include <memory>
 #include "clustersearcher.h"
-#include "cluster.h"
+#include "point.h"
 
 // forward declaration
 enum class ALG;

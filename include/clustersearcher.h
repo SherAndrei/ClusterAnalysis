@@ -13,7 +13,7 @@ public:
 
     void set_delta(double d);
 
-    const std::vector<Cluster> clusters() const;
+    std::vector<Cluster>  clusters() const;
     std::vector<Cluster>& clusters();
 protected:
 	std::vector<Cluster> _clusters;
