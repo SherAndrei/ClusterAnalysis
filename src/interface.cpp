@@ -10,34 +10,36 @@ Interface::Interface(int new_id, bool record_rule)
 
 void Interface::start()
 {
-    int from_file = 0;
-    cout << "Read commands from file 1, from konsole 0:" << endl;
-    cin >> from_file;
-    switch (from_file)
+    char input;
+    cout << "Do you want to read commands from FILE? y/n" << endl;
+    input = cin.get();
+    switch (input)
     {
-    case 0: {
+    case 'n': {
         cout << "Enter commands here:" << endl;
-        get_command(cin);
+        read(cin);
         break;
     }
-    case 1: {
+    case 'y': {
         string filename;
         cout << "Enter filename:" << endl;
         cin >> filename;
 
         ifstream input(filename);
-        cout << "Reading commands from file..." << endl;
-        get_command(input);
+        if(!input) cout << "Error reading file" << endl;
+        else cout << "Reading commands..." << endl;
+        
+        read(input);
         break;
     }
     default:
-        cout << "Wrong input!" << endl;
+        cout << "incorrect input." << endl;
         break;
     }
 }
 
 
-void Interface::get_command(istream& is)
+void Interface::read(istream& is)
 {
     string command, first_word;
     istringstream iss;
@@ -91,8 +93,12 @@ void Interface::help() const
        << "\t\tAlogrithm usage:\n"
        << "\t\tWAVE <delta>\n"
        << "\t\tDBSCAN <D> <K>\n"
-    //    << "\tPRINT\n"
-    //    << "\t\tPrints all clusters to 'data' folder\n\n"
+       << "\tPRINT <object>\n"
+       << "\t\tPrints object to ./data folder\n"
+       << "\t\tObject usage:\n"
+       << "\t\tALL    - prints all clusters \n"
+       << "\t\tALG WAVE   - prints result of wave algorithm\n"
+       << "\t\tALG DBSCAN - prints result of DBScan algorithm\n"
        << "\tLOG\n"
        << "\t\tLogs all used commands in log.txt\n\n"
        << "\tEND\n"

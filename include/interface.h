@@ -7,7 +7,7 @@ class Interface
 public:
     Interface(int new_id, bool record_rule);
     void start();
-    void get_command(std::istream& os);
+    void read(std::istream& os);
     void log_out() const;
     void help()    const;
 

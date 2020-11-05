@@ -1,6 +1,5 @@
 #include "parser.h"
 #include <vector>
-#include <utility>
 #include <sstream>
 #include <exception>
 
@@ -41,13 +40,6 @@ std::shared_ptr<Token> parse(const std::string& command)
         } else {
             throw std::logic_error("Bad generate! Use HELP"); 
         }
-    } else if (ok && word == "PRINT") {
-        // считываем следующее слово
-        ok = ok && (iss >> word);
-        if(ok)
-            return std::make_shared<PrintToken>(stoalg(word)); 
-        else 
-            throw std::logic_error("Bad print! Use HELP"); 
     } else if (ok && word == "SEARCH") {
         ok = ok && (iss >> word);
         if (ok && word == "WAVE") {
@@ -63,11 +55,17 @@ std::shared_ptr<Token> parse(const std::string& command)
         ok = ok && (iss >> word);
         if(ok)
             return std::make_shared<ModeToken>(stomode(word));
-        else throw std::logic_error("Bad mode! Use HELP"); 
-    }
-    else if (ok && (word == "HELP" || word == "LOG" || word == "END"))
+    } else if (ok && word == "PRINT") {
+        ok = ok && (iss >> word);
+        if(ok && word == "ALG") {
+            ok = ok && (iss >> word);
+            if(ok)
+                return std::make_shared<PrintToken>(OUTPUT::ALG, stoalg(word)); 
+        } else if (ok)
+            return std::make_shared<PrintToken>(stooutput(word));
+    } else if (ok && (word == "HELP" || word == "LOG" || word == "END"))
         return std::make_shared<UtilsToken>(stoutils(word));
 
     throw std::logic_error("Bad input! Use HELP");
-    return std::make_shared<EmptyToken>();
+    return {};
 }

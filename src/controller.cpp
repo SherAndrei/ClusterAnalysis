@@ -1,8 +1,7 @@
-#include "algorithms/WaveAlgorithm.h"
-#include "algorithms/DBScanAlgorithm.h"
 #include "controller.h"
-#include "cluster.h"
-#include "field.h"
+#include "algorithms/Wave.h"
+#include "algorithms/DBScan.h"
+#include "gnuplot.h"
 #include <fstream>
 
 void Controller::generate(ENTITY en, const std::vector<std::string>& params)
@@ -45,18 +44,18 @@ void Controller::search(ALG alg, const std::vector<std::string>& params)
         throw std::logic_error("Cannot search in not search mode!");
     }
 
-    std::shared_ptr<ClusterSearcher> sh_alg;
+    std::shared_ptr<Algorithm> sh_alg;
     switch (alg)
     {
     case ALG::WAVE: {
         double d = stod(params[0]);
-        sh_alg = std::make_shared<WaveAlgorithm>(d);
+        sh_alg = std::make_shared<Wave>(d);
         break;
     }
     case ALG::DBSCAN: {
         double D = stod(params[0]);
         int K    = stoi(params[1]);
-        sh_alg = std::make_shared<DBScanAlgorithm>(D, K);
+        sh_alg = std::make_shared<DBScan>(D, K);
         break;
     }
     default:
@@ -66,27 +65,34 @@ void Controller::search(ALG alg, const std::vector<std::string>& params)
     field.searchers[alg] = sh_alg;
 }
 
-void Controller::print(ALG alg) const
+void Controller::print(OUTPUT out, ALG alg) const
 {
-    ofstream file;
-    switch (alg)
+    switch (out)
     {
-    case ALG::NO_ALG: {
-        file.open("data/alldata.dat");
-        for(const auto& cluster : cg.clusters())
-            file << cluster;
-        file.close();
+    case OUTPUT::ALL: {
+        std::ofstream file;
+        GNUPLOT g(this);
+        g.setup(out);
+        const auto& clusters = cg.clusters(); 
+        for(size_t i = 1; i <= clusters.size(); i++) {
+            file.open("data/all/cluster" + to_string(i) + ".dat");
+            file << clusters[i - 1];
+            file.close();
+        }
         break;
-    }  
-    default: 
-        if(field.searchers.count(alg)) {
-            auto& new_clusters = field.searchers.at(alg)->clusters();
-            for(size_t i = 0; i < new_clusters.size(); i++) {
-                file.open("data/" + to_string(alg) + "/cluster" + to_string(i + 1) + ".dat");
-                file << new_clusters[i];
-                file.close();
-            }
-        } 
+    }
+    case OUTPUT::ALG: {
+        std::ofstream file;
+        const auto& clusters = field.searchers.at(alg)->clusters();
+        std::string path = "data/" + algtos(alg) + "/";
+        for(size_t i = 1; i <= clusters.size(); i++) {
+            file.open(path + "cluster" + to_string(i) + ".dat");
+            file << clusters[i];
+            file.close();
+        }        
+        break;
+    }
+    default:
         break;
     }
 }

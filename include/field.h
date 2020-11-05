@@ -1,9 +1,8 @@
 #pragma once
-#include <ostream>
 #include <vector>
 #include <map>
 #include <memory>
-#include "clustersearcher.h"
+#include "algorithm.h"
 #include "point.h"
 
 // forward declaration
@@ -14,11 +13,11 @@ class Field
 public:
     Field() = default;
     ~Field() = default;
-    size_t points_amount() const;
+    // size_t points_amount() const;
 
 public:
     std::vector<Point> points;
-    std::map<ALG, std::shared_ptr<ClusterSearcher>> searchers;
+    std::map<ALG, std::shared_ptr<Algorithm>> searchers;
 };
 
-std::ostream& operator << (std::ostream& os, const Field& f);
+// std::ostream& operator << (std::ostream& os, const Field& f);

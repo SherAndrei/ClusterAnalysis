@@ -1,6 +1,6 @@
 #pragma once
 
-#include "controller.h"
+#include <string>
 #include <vector>
 
 class Controller;
@@ -14,12 +14,11 @@ struct Token {
 enum class ALG
 {
     UNKNOWN = -1,
-    NO_ALG,
     WAVE,
     DBSCAN
 };
 
-std::string to_string(ALG alg);
+std::string algtos(ALG alg);
 ALG stoalg(const std::string& ald);
 
 class SearchToken : public Token
@@ -31,11 +30,23 @@ public:
     void Evaluate(Controller& ctrl) const override;
 };
 
+enum class OUTPUT
+{
+    UNKNOWN = -1,
+    ALL,
+    ALG,
+    GRAPH,
+    HISTOGRAM
+};
+
+OUTPUT stooutput(const std::string& word);
+
 class PrintToken : public Token 
 {
+    OUTPUT _out;
     ALG _alg;
 public:
-    PrintToken(ALG num);
+    PrintToken(OUTPUT out, ALG alg = ALG::UNKNOWN);
     void Evaluate(Controller& ctrl) const override;
 };
 
@@ -89,12 +100,5 @@ class ModeToken : public Token
     MODE _m;
 public:
     ModeToken(MODE m);
-    void Evaluate(Controller& ctrl) const override;
-};
-
-class EmptyToken : public Token
-{
-public:
-    EmptyToken() = default;
     void Evaluate(Controller& ctrl) const override;
 };
