@@ -1,17 +1,16 @@
 #include <vector>
 #include <set>
 #include <stack>
-#include "algorithms/WaveAlgorithm.h"
+#include "algorithms/Wave.h"
 #include "cluster.h"
 
 using namespace std;
 
-WaveAlgorithm::WaveAlgorithm(double delta)
-    : ClusterSearcher(delta)
+Wave::Wave(double delta)
+    : Algorithm(delta)
     {}
 
-void WaveAlgorithm::find(const vector<Point>& points) {
-
+void Wave::find(const vector<Point>& points) {
     reconfigure_distances(points);
     set<int> used;
 

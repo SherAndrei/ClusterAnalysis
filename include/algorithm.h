@@ -1,12 +1,12 @@
 #pragma once
 #include <vector>
-#include "cluster.h"
 #include "matrix.h"
+#include "cluster.h"
 
-class ClusterSearcher
+class Algorithm
 {
 public:
-	ClusterSearcher(double d);
+	Algorithm(double d);
 
 	virtual void find(const std::vector<Point>& points) = 0;
     void reconfigure_distances(const std::vector<Point>& points);
