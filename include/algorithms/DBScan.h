@@ -1,10 +1,10 @@
 #pragma once
-#include "../algorithm.h"
 #include <set>
+#include <vector>
+#include "../algorithm.h"
 
-class DBScan : public Algorithm
-{
-public:
+class DBScan : public Algorithm {
+ public:
     DBScan(double D, size_t K);
 
     void find(const std::vector<Point>& points) override;

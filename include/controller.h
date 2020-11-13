@@ -7,9 +7,8 @@
 #include "logger.h"
 #include "token.h"
 
-class Controller
-{
-public:
+class Controller {
+ public:
     Controller() = default;
 
     void generate(ENTITY en, const std::vector<std::string>& params);
@@ -17,13 +16,14 @@ public:
     void print(OUTPUT out, ALG alg = ALG::UNKNOWN) const;
     void setup(MODE m);
 
-private:
+ private:
     friend class GNUPLOT;
-private:
+ private:
     MODE mode;
     Field field;
     ClusterGenerator cg;
     bool record_log = true;
     Logger lg;
 };
+
 

@@ -2,50 +2,45 @@
 #include "interface.h"
 #include "parser.h"
 
-using namespace std;
-
 Interface::Interface(int new_id, bool record_rule)
-	: ID(new_id), record_log(record_rule)
-	{}
+    : ID(new_id), record_log(record_rule) {}
 
-void Interface::start()
-{
+void Interface::start() {
     char input;
-    cout << "Do you want to read commands from FILE? y/n" << endl;
-    input = cin.get();
-    switch (input)
-    {
+    std::cout << "Do you want to read commands from FILE? y/n" << std::endl;
+    input = std::cin.get();
+    switch (input) {
     case 'n': {
-        cout << "Enter commands here:" << endl;
-        read(cin);
+        std::cout << "Enter commands here:" << std::endl;
+        read(std::cin);
         break;
     }
     case 'y': {
-        string filename;
-        cout << "Enter filename:" << endl;
-        cin >> filename;
+        std::string filename;
+        std::cout << "Enter filename:" << std::endl;
+        std::cin >> filename;
 
-        ifstream input(filename);
-        if(!input) cout << "Error reading file" << endl;
-        else cout << "Reading commands..." << endl;
-        
+        std::ifstream input(filename);
+        if (!input)
+            std::cout << "Error reading file" << std::endl;
+        else
+            std::cout << "Reading commands..." << std::endl;
+
         read(input);
         break;
     }
     default:
-        cout << "incorrect input." << endl;
+        std::cout << "incorrect input." << std::endl;
         break;
     }
 }
 
 
-void Interface::read(istream& is)
-{
-    string command, first_word;
-    istringstream iss;
-    if(is.peek() == '\n') is.get();
-    while(getline(is, command))
-    {   
+void Interface::read(std::istream& is) {
+    std::string command, first_word;
+    std::istringstream iss;
+    if (is.peek() == '\n') is.get();
+    while (std::getline(is, command)) {
         logger.log(command);
         try {
             auto token = parse(command);
@@ -54,29 +49,26 @@ void Interface::read(istream& is)
             std::cout << ex.what() << std::endl;
             logger.log(ex.what());
         } catch (UTILS cmd) {
-            switch (cmd)
-            {
+            switch (cmd) {
             case UTILS::HELP: help(); break;
             case UTILS::LOG: log_out(); break;
             default:
                 break;
             }
-            if(cmd == UTILS::END)
+            if (cmd == UTILS::END)
                 break;
         }
     }
 }
 
-void Interface::log_out() const
-{
-    ofstream out("log.txt");
+void Interface::log_out() const {
+    std::ofstream out("log.txt");
     out << logger.str();
 }
 
-void Interface::help() const 
-{
-    ofstream help_f("help.txt");
-    ostringstream os;
+void Interface::help() const  {
+    std::ofstream help_f("help.txt");
+    std::ostringstream os;
     os << "Usage:\n"
        << "\tSETUP <mode>\n"
        << "\tSetup mode for working with field:\n"
@@ -104,6 +96,6 @@ void Interface::help() const
        << "\tEND\n"
        << "\t\tEnd of session\n\n";
 
-    cout << os.str();
+    std::cout << os.str();
     help_f << os.str();
 }

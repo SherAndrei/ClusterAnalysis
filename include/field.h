@@ -8,16 +8,13 @@
 // forward declaration
 enum class ALG;
 
-class Field
-{
-public:
+class Field {
+ public:
     Field() = default;
     ~Field() = default;
     // size_t points_amount() const;
 
-public:
+ public:
     std::vector<Point> points;
     std::map<ALG, std::shared_ptr<Algorithm>> searchers;
 };
-
-// std::ostream& operator << (std::ostream& os, const Field& f);

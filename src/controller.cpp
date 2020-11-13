@@ -1,23 +1,21 @@
+#include <fstream>
 #include "controller.h"
 #include "algorithms/Wave.h"
 #include "algorithms/DBScan.h"
 #include "gnuplot.h"
-#include <fstream>
 
-void Controller::generate(ENTITY en, const std::vector<std::string>& params)
-{
-    if(mode != MODE::GENERATE) {
+void Controller::generate(ENTITY en, const std::vector<std::string>& params) {
+    if (mode != MODE::GENERATE) {
         throw std::logic_error("Cannot generate in not generate mode!");
     }
-    switch (en)
-    {
+    switch (en) {
     case ENTITY::CLOUD: {
         double meanX = stod(params[0]);
         double meanY = stod(params[1]);
         double varX  = stod(params[2]);
         double varY  = stod(params[3]);
         int N        = stoi(params[4]);
-        if(N < 0)
+        if (N < 0)
             throw std::out_of_range("Bad amount of points!" + params[4]);
         cg.cloud(meanX, meanY, varX, varY, N);
         break;
@@ -28,9 +26,9 @@ void Controller::generate(ENTITY en, const std::vector<std::string>& params)
         double minY = stod(params[2]);
         double maxY = stod(params[3]);
         int N       = stoi(params[4]);
-        if(N < 0)
+        if (N < 0)
             throw std::out_of_range("Bad amount of points!" + params[4]);
-        cg.starsky(minX, maxX, minY, maxY, N);    
+        cg.starsky(minX, maxX, minY, maxY, N);
         break;
     }
     default:
@@ -38,15 +36,13 @@ void Controller::generate(ENTITY en, const std::vector<std::string>& params)
     }
 }
 
-void Controller::search(ALG alg, const std::vector<std::string>& params)
-{
-    if(mode != MODE::SEARCH) {
+void Controller::search(ALG alg, const std::vector<std::string>& params) {
+    if (mode != MODE::SEARCH) {
         throw std::logic_error("Cannot search in not search mode!");
     }
 
     std::shared_ptr<Algorithm> sh_alg;
-    switch (alg)
-    {
+    switch (alg) {
     case ALG::WAVE: {
         double d = stod(params[0]);
         sh_alg = std::make_shared<Wave>(d);
@@ -65,17 +61,15 @@ void Controller::search(ALG alg, const std::vector<std::string>& params)
     field.searchers[alg] = sh_alg;
 }
 
-void Controller::print(OUTPUT out, ALG alg) const
-{
-    switch (out)
-    {
+void Controller::print(OUTPUT out, ALG alg) const {
+    switch (out) {
     case OUTPUT::ALL: {
         std::ofstream file;
         GNUPLOT g(this);
         g.setup(out);
-        const auto& clusters = cg.clusters(); 
-        for(size_t i = 1; i <= clusters.size(); i++) {
-            file.open("data/all/cluster" + to_string(i) + ".dat");
+        const auto& clusters = cg.clusters();
+        for (size_t i = 1; i <= clusters.size(); i++) {
+            file.open("data/all/cluster" + std::to_string(i) + ".dat");
             file << clusters[i - 1];
             file.close();
         }
@@ -85,11 +79,11 @@ void Controller::print(OUTPUT out, ALG alg) const
         std::ofstream file;
         const auto& clusters = field.searchers.at(alg)->clusters();
         std::string path = "data/" + algtos(alg) + "/";
-        for(size_t i = 1; i <= clusters.size(); i++) {
-            file.open(path + "cluster" + to_string(i) + ".dat");
+        for (size_t i = 1; i <= clusters.size(); i++) {
+            file.open(path + "cluster" + std::to_string(i) + ".dat");
             file << clusters[i];
             file.close();
-        }        
+        }
         break;
     }
     default:
@@ -97,18 +91,16 @@ void Controller::print(OUTPUT out, ALG alg) const
     }
 }
 
-void Controller::setup(MODE m) 
-{
-    if(m == mode)
+void Controller::setup(MODE m)  {
+    if (m == mode)
         return;
-    switch (m)
-    {
+    switch (m) {
     case MODE::GENERATE:
         field.searchers.clear();
         break;
     case MODE::SEARCH:
-        for(const auto& cluster : cg.clusters()) {
-            for(const auto& point : cluster.points()) {
+        for (const auto& cluster : cg.clusters()) {
+            for (const auto& point : cluster.points()) {
                 field.points.push_back(point);
             }
         }

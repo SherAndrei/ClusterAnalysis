@@ -3,12 +3,11 @@
 #include "matrix.h"
 #include "cluster.h"
 
-class Algorithm
-{
-public:
-	Algorithm(double d);
+class Algorithm {
+ public:
+    explicit Algorithm(double d);
 
-	virtual void find(const std::vector<Point>& points) = 0;
+    virtual void find(const std::vector<Point>& points) = 0;
     void reconfigure_distances(const std::vector<Point>& points);
 
     void set_delta(double d);
@@ -16,7 +15,7 @@ public:
     std::vector<Cluster>  clusters() const;
     std::vector<Cluster>& clusters();
 protected:
-	std::vector<Cluster> _clusters;
+    std::vector<Cluster> _clusters;
     Matrix<bool> distances;
     double delta;
 };

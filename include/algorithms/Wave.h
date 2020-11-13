@@ -1,10 +1,10 @@
 #pragma once
+#include <vector>
 #include "../algorithm.h"
 
-class Wave : public Algorithm
-{
-public:
-	Wave(double delta);
+class Wave : public Algorithm {
+ public:
+    explicit Wave(double delta);
 
-	void find(const std::vector<Point>& points) override;
+    void find(const std::vector<Point>& points) override;
 };

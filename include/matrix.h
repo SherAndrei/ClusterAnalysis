@@ -5,42 +5,42 @@
 
 template<class T>
 class Matrix {
-public:
+ public:
+    Matrix() : num_rows_(0u), num_columns_(0u) {}
+    Matrix(size_t num_rows, size_t num_columns);
 
-	Matrix() : num_rows_(0u), num_columns_(0u) {}
-	Matrix(size_t num_rows, size_t num_columns); 
+     void Reset(size_t num_rows, size_t num_columns);
 
- 	void Reset(size_t num_rows, size_t num_columns);
+      T& At(size_t row, size_t column);
+      T At(size_t row, size_t column) const;
 
-  	T& At(size_t row, size_t column);
-  	T At(size_t row, size_t column) const;
-	
-  	std::vector<T>& operator[](size_t row);
-  	const std::vector<T>& operator[](size_t row) const;
+      std::vector<T>& operator[](size_t row);
+      const std::vector<T>& operator[](size_t row) const;
 
-  	size_t NumRows() const;
-  	size_t NumColumns() const;
-private:
-  	size_t num_rows_;
-  	size_t num_columns_;
+      size_t NumRows() const;
+      size_t NumColumns() const;
+ private:
+      size_t num_rows_;
+      size_t num_columns_;
 
-  	std::vector<std::vector<T>> elements_;
+      std::vector<std::vector<T>> elements_;
 };
+
 
 template<class T>
 Matrix<T>::Matrix(size_t num_rows, size_t num_columns) {
-	Matrix::Reset(num_rows, num_columns);
+    Matrix::Reset(num_rows, num_columns);
 }
 
 template<class T>
 void Matrix<T>::Reset(size_t num_rows, size_t num_columns) {
-	if (num_rows == 0 || num_columns == 0) {
-		num_rows = num_columns = 0;
-	}
+    if (num_rows == 0 || num_columns == 0) {
+        num_rows = num_columns = 0;
+    }
 
-	num_rows_    = num_rows;
-	num_columns_ = num_columns;
-	elements_.assign(num_rows, std::vector<T>(num_columns));
+    num_rows_    = num_rows;
+    num_columns_ = num_columns;
+    elements_.assign(num_rows, std::vector<T>(num_columns));
 }
 
 template<class T>
@@ -59,8 +59,7 @@ template<class T>
 size_t Matrix<T>::NumColumns() const { return num_columns_; }
 
 template<class T>
-Matrix<T> operator+(const Matrix<T>& one, const Matrix<T>& two)
-{
+Matrix<T> operator+(const Matrix<T>& one, const Matrix<T>& two) {
     if (one.NumRows() != two.NumRows()) {
         throw std::invalid_argument("Mismatched number of rows");
     }
@@ -81,8 +80,7 @@ Matrix<T> operator+(const Matrix<T>& one, const Matrix<T>& two)
 }
 
 template<class T>
-std::istream& operator>>(std::istream& in, Matrix<T>& matrix)
-{
+std::istream& operator>>(std::istream& in, Matrix<T>& matrix) {
   size_t num_rows, num_columns;
   in >> num_rows >> num_columns;
 
@@ -96,8 +94,7 @@ std::istream& operator>>(std::istream& in, Matrix<T>& matrix)
   return in;
 }
 template<class T>
-std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix)
-{
+std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix) {
   out << matrix.NumRows() << " " << matrix.NumColumns() << std::endl;
   size_t row, column;
   for (row = 0u; row < matrix.NumRows(); ++row) {

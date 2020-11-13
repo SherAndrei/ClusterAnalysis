@@ -2,9 +2,8 @@
 #include <vector>
 #include "cluster.h"
 
-class ClusterGenerator
-{
-public:
+class ClusterGenerator {
+ public:
     ClusterGenerator() = default;
 
     void cloud(double meanX, double meanY, double varianceX, double varianceY, int N);
@@ -12,6 +11,6 @@ public:
 
     std::vector<Cluster>  clusters() const;
     std::vector<Cluster>& clusters();
-private:
+ private:
     std::vector<Cluster> _clusters;
 };
