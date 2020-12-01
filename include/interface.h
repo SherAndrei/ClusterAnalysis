@@ -5,7 +5,7 @@
 class Interface {
  public:
     Interface(int new_id, bool record_rule);
-    void start();
+    void start(int argc, char* argv[]);
     void read(std::istream& os);
     void log_out() const;
     void help()    const;

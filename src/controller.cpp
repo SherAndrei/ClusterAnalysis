@@ -6,7 +6,7 @@
 
 void Controller::generate(ENTITY en, const std::vector<std::string>& params) {
     if (mode != MODE::GENERATE) {
-        throw std::logic_error("Cannot generate in not generate mode!");
+        throw std::invalid_argument("Cannot generate in not generate mode!");
     }
     switch (en) {
     case ENTITY::CLOUD: {
@@ -38,7 +38,7 @@ void Controller::generate(ENTITY en, const std::vector<std::string>& params) {
 
 void Controller::search(ALG alg, const std::vector<std::string>& params) {
     if (mode != MODE::SEARCH) {
-        throw std::logic_error("Cannot search in not search mode!");
+        throw std::invalid_argument("Cannot search in not search mode!");
     }
 
     std::shared_ptr<Algorithm> sh_alg;
@@ -76,12 +76,18 @@ void Controller::print(OUTPUT out, ALG alg) const {
         break;
     }
     case OUTPUT::ALG: {
+        const auto& searchers = field.searchers;
+        if (!searchers.count(alg)) {
+            throw std::runtime_error("Try to print nonexesting alg");
+        }
         std::ofstream file;
-        const auto& clusters = field.searchers.at(alg)->clusters();
+        GNUPLOT g(this);
+        g.setup(out, alg);
+        const auto& clusters = searchers.at(alg)->clusters();
         std::string path = "data/" + algtos(alg) + "/";
         for (size_t i = 1; i <= clusters.size(); i++) {
             file.open(path + "cluster" + std::to_string(i) + ".dat");
-            file << clusters[i];
+            file << clusters[i - 1];
             file.close();
         }
         break;

@@ -15,7 +15,7 @@ static std::vector<std::string> parse_parameters(std::istringstream& iss, size_t
     }
 
     if (counter != params_num)
-        throw std::logic_error("Bad parameters! Use HELP");
+        throw std::invalid_argument("Bad parameters! Use HELP");
 
     return p;
 }
@@ -26,8 +26,17 @@ std::shared_ptr<Token> parse(const std::string& command) {
     bool ok = true;
     // находим первое слово
     ok = ok && (iss >> word);
-    if (ok && word == "GENERATE") {
+    if (ok && word == "SETUP") {
         // считываем следующее слово
+        ok = ok && (iss >> word);
+        if (ok && word == "SEARCH") {
+            return std::make_shared<ModeToken>(MODE::SEARCH);
+        } else if (ok && word == "GENERATE") {
+            return std::make_shared<ModeToken>(MODE::GENERATE);
+        } else {
+            throw std::invalid_argument("Bad setup mode! Use HELP");
+        }
+    } else if (ok && word == "GENERATE") {
         ok = ok && (iss >> word);
         if (ok && word == "CLOUD") {
             auto params = parse_parameters(iss, 5);
@@ -36,7 +45,7 @@ std::shared_ptr<Token> parse(const std::string& command) {
             auto params = parse_parameters(iss, 5);
             return std::make_shared<GenerateToken>(ENTITY::STARSKY, params);
         } else {
-            throw std::logic_error("Bad generate! Use HELP");
+            throw std::invalid_argument("Bad generate! Use HELP");
         }
     } else if (ok && word == "SEARCH") {
         ok = ok && (iss >> word);
@@ -47,7 +56,7 @@ std::shared_ptr<Token> parse(const std::string& command) {
             auto params = parse_parameters(iss, 2);
             return std::make_shared<SearchToken>(ALG::DBSCAN, params);
         } else {
-            throw std::logic_error("Bad search! Use HELP");
+            throw std::invalid_argument("Bad search! Use HELP");
         }
     } else if (ok && word == "MODE") {
         // считываем следующее слово
@@ -67,6 +76,6 @@ std::shared_ptr<Token> parse(const std::string& command) {
         return std::make_shared<UtilsToken>(stoutils(word));
     }
 
-    throw std::logic_error("Bad input! Use HELP");
+    throw std::invalid_argument("Bad input! Use HELP");
     return {};
 }

@@ -16,9 +16,6 @@ HDR_ALGS  := $(patsubst %, $(HDR)/$(ALG_FOLDER)/%.h, $(ALGS))
 OBJ_ALGS  := $(patsubst %, $(OBJ)/%.o, $(ALGS))
 DATA_ALGS := $(patsubst %, $(DATA)/%, $(ALGS))
 
-#message:
-	#@echo $(HDR_ALGS)
-
 SUBDATA := $(DATA)/all $(DATA)/histograms $(DATA)/graphs $(DATA_ALGS)
 
 #Compiler features
@@ -32,49 +29,48 @@ CFLAGS := -mfpmath=sse -fstack-protector-all -W -Wall -Wextra -Wunused -Wcast-al
 
 #Variables
 EXE    := $(BIN)/main
-R_OBJS := main.o point.o cluster.o field.o  \
-		  clustergenerator.o algorithm.o    \
-		  gnuplot.o interface.o             \
-		  logger.o parser.o  token.o controller.o
-OBJS := $(patsubst %.o, $(OBJ)/%.o, $(R_OBJS))
+SRCS := $(wildcard $(SRC)/*.cpp)
+OBJS := $(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
+
+all : debug
 
 $(EXE): $(OBJS) $(OBJ_ALGS)| $(BIN) $(DATA) $(SUBDATA)
 	$(LD) $^ -o $@
 
-$(OBJ)/main.o : $(SRC)/main.cpp $(OBJ)/interface.o | $(OBJ)
+$(OBJ)/main.o : $(SRC)/main.cpp $(HDR)/interface.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@ 
 
 $(OBJ)/clustergenerator.o : $(SRC)/clustergenerator.cpp $(HDR)/clustergenerator.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(OBJ)/controller.o : $(SRC)/controller.cpp $(HDR)/controller.h $(OBJ)/field.o $(OBJ_ALGS) $(OBJ)/logger.o $(OBJ)/algorithm.o $(OBJ)/clustergenerator.o $(OBJ)/gnuplot.o $(HDR)/token.h | $(OBJ)
+$(OBJ)/controller.o : $(SRC)/controller.cpp $(HDR)/controller.h $(HDR)/field.h $(OBJ_ALGS) $(HDR)/logger.h $(HDR)/algorithm.h $(HDR)/clustergenerator.h $(HDR)/gnuplot.h $(HDR)/token.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
 $(OBJ_ALGS): $(OBJ)/%.o : $(SRC)/$(ALG_FOLDER)/%.cpp $(HDR)/$(ALG_FOLDER)/%.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(OBJ)/interface.o : $(SRC)/interface.cpp $(HDR)/interface.h $(OBJ)/controller.o $(OBJ)/logger.o $(OBJ)/parser.o | $(OBJ)
+$(OBJ)/interface.o : $(SRC)/interface.cpp $(HDR)/interface.h $(HDR)/controller.h $(HDR)/logger.h $(HDR)/parser.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
 $(OBJ)/logger.o : $(SRC)/logger.cpp $(HDR)/logger.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(OBJ)/parser.o : $(SRC)/parser.cpp $(HDR)/parser.h $(OBJ)/token.o | $(OBJ)
+$(OBJ)/parser.o : $(SRC)/parser.cpp $(HDR)/parser.h $(HDR)/token.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(OBJ)/token.o : $(SRC)/token.cpp $(HDR)/token.h $(OBJ)/controller.o | $(OBJ)
+$(OBJ)/token.o : $(SRC)/token.cpp $(HDR)/token.h $(HDR)/controller.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
 $(OBJ)/gnuplot.o : $(SRC)/gnuplot.cpp $(HDR)/gnuplot.h $(HDR)/controller.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(OBJ)/field.o : $(SRC)/field.cpp $(HDR)/field.h $(OBJ)/point.o $(OBJ)/algorithm.o | $(OBJ)
+$(OBJ)/field.o : $(SRC)/field.cpp $(HDR)/field.h $(HDR)/point.h $(HDR)/algorithm.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(OBJ)/algorithm.o : $(SRC)/algorithm.cpp $(HDR)/algorithm.h $(OBJ)/cluster.o $(HDR)/matrix.h | $(OBJ)
+$(OBJ)/algorithm.o : $(SRC)/algorithm.cpp $(HDR)/algorithm.h $(HDR)/cluster.h $(HDR)/matrix.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(OBJ)/cluster.o : $(SRC)/cluster.cpp $(HDR)/cluster.h $(OBJ)/point.o | $(OBJ)
+$(OBJ)/cluster.o : $(SRC)/cluster.cpp $(HDR)/cluster.h $(HDR)/point.h | $(OBJ)
 	$(CC) $(CFLAGS) $< -o $@
 
 $(OBJ)/point.o : $(SRC)/point.cpp $(HDR)/point.h | $(OBJ)
@@ -83,7 +79,7 @@ $(OBJ)/point.o : $(SRC)/point.cpp $(HDR)/point.h | $(OBJ)
 $(BIN) $(OBJ) $(DATA) $(SUBDATA):
 	$(MKDIR) $@
 
-.PHONY: clean debug release
+.PHONY: clean cleandata debug release all
 
 debug: CFLAGS += -DDEBUG -g -O0 
 debug: $(EXE)
@@ -93,3 +89,6 @@ release: $(EXE)
 
 clean:
 	$(RMDIR) $(OBJ) $(BIN) $(DATA) ./log.txt ./help.txt
+
+cleandata:
+	$(RMDIR) $(DATA)

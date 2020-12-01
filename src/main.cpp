@@ -1,6 +1,6 @@
 #include "interface.h"
 
-int main() {
+int main(int argc, char* argv[]) {
     Interface i(1, true);
-    i.start();
+    i.start(argc, argv);
 }

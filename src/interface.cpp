@@ -1,3 +1,4 @@
+#include <exception>
 #include <fstream>
 #include "interface.h"
 #include "parser.h"
@@ -5,24 +6,21 @@
 Interface::Interface(int new_id, bool record_rule)
     : ID(new_id), record_log(record_rule) {}
 
-void Interface::start() {
-    char input;
-    std::cout << "Do you want to read commands from FILE? y/n" << std::endl;
-    input = std::cin.get();
-    switch (input) {
-    case 'n': {
+void Interface::start(int argc, char* argv[]) {
+    if (!(argc == 1 || argc == 2)) {
+        throw std::invalid_argument("Usage: " + std::string(argv[0]) + " [optional: filename]");
+    }
+    switch (argc) {
+    case 1: {
         std::cout << "Enter commands here:" << std::endl;
         read(std::cin);
         break;
     }
-    case 'y': {
-        std::string filename;
-        std::cout << "Enter filename:" << std::endl;
-        std::cin >> filename;
-
+    case 2: {
+        std::string filename(argv[1]);
         std::ifstream input(filename);
         if (!input)
-            std::cout << "Error reading file" << std::endl;
+            std::cout << "Cannot open file" << std::endl;
         else
             std::cout << "Reading commands..." << std::endl;
 
@@ -30,7 +28,6 @@ void Interface::start() {
         break;
     }
     default:
-        std::cout << "incorrect input." << std::endl;
         break;
     }
 }
@@ -46,12 +43,16 @@ void Interface::read(std::istream& is) {
             auto token = parse(command);
             token->Evaluate(controller);
         } catch (const std::exception& ex) {
-            std::cout << ex.what() << std::endl;
+            std::cout << ex.what() << std::endl
+                      << "Logs dumped in log.txt" << std::endl;
             logger.log(ex.what());
+            log_out();
         } catch (UTILS cmd) {
             switch (cmd) {
-            case UTILS::HELP: help(); break;
-            case UTILS::LOG: log_out(); break;
+            case UTILS::HELP: help();
+                break;
+            case UTILS::LOG: log_out();
+                break;
             default:
                 break;
             }
