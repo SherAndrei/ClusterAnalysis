@@ -12,7 +12,7 @@ class Algorithm {
 
     void set_delta(double d);
 
-    std::vector<Cluster>  clusters() const;
+    const std::vector<Cluster>&  clusters() const;
     std::vector<Cluster>& clusters();
 protected:
     std::vector<Cluster> _clusters;

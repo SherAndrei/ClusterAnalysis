@@ -62,10 +62,10 @@ void Controller::search(ALG alg, const std::vector<std::string>& params) {
 }
 
 void Controller::print(OUTPUT out, ALG alg) const {
+    GNUPLOT g(this);
     switch (out) {
     case OUTPUT::ALL: {
         std::ofstream file;
-        GNUPLOT g(this);
         g.setup(out);
         const auto& clusters = cg.clusters();
         for (size_t i = 1; i <= clusters.size(); i++) {
@@ -81,7 +81,6 @@ void Controller::print(OUTPUT out, ALG alg) const {
             throw std::runtime_error("Try to print nonexesting alg");
         }
         std::ofstream file;
-        GNUPLOT g(this);
         g.setup(out, alg);
         const auto& clusters = searchers.at(alg)->clusters();
         std::string path = "data/" + algtos(alg) + "/";

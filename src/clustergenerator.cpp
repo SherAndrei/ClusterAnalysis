@@ -23,5 +23,5 @@ void ClusterGenerator::starsky(double minX, double maxX, double minY, double max
     _clusters.push_back(c);
 }
 
-std::vector<Cluster>  ClusterGenerator::clusters() const { return _clusters; }
+const std::vector<Cluster>&  ClusterGenerator::clusters() const { return _clusters; }
 std::vector<Cluster>& ClusterGenerator::clusters() { return _clusters; }

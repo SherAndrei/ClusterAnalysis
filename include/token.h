@@ -82,8 +82,6 @@ class UtilsToken : public Token {
     void Evaluate(Controller& ctrl) const override;
 };
 
-
-
 enum class MODE {
     UNKNOWN = -1,
     GENERATE,

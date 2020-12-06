@@ -34,7 +34,7 @@ void Interface::start(int argc, char* argv[]) {
 
 
 void Interface::read(std::istream& is) {
-    std::string command, first_word;
+    std::string command;
     std::istringstream iss;
     if (is.peek() == '\n') is.get();
     while (std::getline(is, command)) {

@@ -91,4 +91,4 @@ clean:
 	$(RMDIR) $(OBJ) $(BIN) $(DATA) ./log.txt ./help.txt
 
 cleandata:
-	$(RMDIR) $(DATA)
+	$(RMDIR) $(DATA)/*/*.dat $(DATA)/*/plot.p

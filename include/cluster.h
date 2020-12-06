@@ -9,6 +9,7 @@ class Cluster {
     void add(const Point& p);
 
     const std::vector<Point>& points() const;
+    std::vector<Point>& points();
 
  private:
     std::vector<Point> _points;

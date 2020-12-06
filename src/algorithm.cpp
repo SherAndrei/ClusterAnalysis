@@ -11,7 +11,7 @@ void Algorithm::reconfigure_distances(const std::vector<Point>& points) {
             distances[i][j] = (distance(points[i], points[j]) < delta);
 }
 
-std::vector<Cluster>  Algorithm::clusters() const { return _clusters; }
+const std::vector<Cluster>&  Algorithm::clusters() const { return _clusters; }
 std::vector<Cluster>& Algorithm::clusters() { return _clusters; }
 
 void Algorithm::set_delta(double d) { delta = d; }
