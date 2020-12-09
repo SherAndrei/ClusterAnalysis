@@ -2,6 +2,10 @@
 #include "controller.h"
 #include "algorithms/Wave.h"
 #include "algorithms/DBScan.h"
+#include "algorithms/EM.h"
+#include "algorithms/FOREL.h"
+#include "algorithms/Hierarchical.h"
+#include "algorithms/KMeans.h"
 #include "gnuplot.h"
 
 void Controller::generate(ENTITY en, const std::vector<std::string>& params) {
@@ -52,6 +56,26 @@ void Controller::search(ALG alg, const std::vector<std::string>& params) {
         double D = stod(params[0]);
         int K    = stoi(params[1]);
         sh_alg = std::make_shared<DBScan>(D, K);
+        break;
+    }
+    case ALG::EM: {
+        size_t k = std::stoul(params[0]);
+        sh_alg = std::make_shared<EM>(k);
+        break;
+    }
+    case ALG::KMEANS: {
+        int k = std::stoi(params[0]);
+        sh_alg = std::make_shared<EM>(k);
+        break;
+    }
+    case ALG::HIERAR: {
+        int k = std::stoi(params[0]);
+        sh_alg = std::make_shared<Hierarchical>(k);
+        break;
+    }
+    case ALG::FOREL: {
+        double d = std::stod(params[0]);
+        sh_alg = std::make_shared<FOREL>(d);
         break;
     }
     default:

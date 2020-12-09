@@ -10,6 +10,10 @@ std::string algtos(ALG alg) {
     switch (alg) {
     case ALG::WAVE:   return "Wave";
     case ALG::DBSCAN: return "DBScan";
+    case ALG::KMEANS: return "KMeans";
+    case ALG::HIERAR: return "Hierarchical";
+    case ALG::FOREL:  return "FOREL";
+    case ALG::EM:     return "EM";
     default: return {};
     }
 }
@@ -19,6 +23,14 @@ ALG stoalg(const std::string& alg) {
         return  ALG::WAVE;
     else if (alg == "DBSCAN")
         return  ALG::DBSCAN;
+    else if (alg == "EM")
+        return ALG::EM;
+    else if (alg == "KMEANS")
+        return ALG::KMEANS;
+    else if (alg == "HIERARCHICAL" || alg == "HIE")
+        return ALG::HIERAR;
+    else if (alg == "FOREL")
+        return ALG::FOREL;
     else
         return ALG::UNKNOWN;
 }

@@ -4,8 +4,20 @@
 #include "algorithms/Wave.h"
 #include "cluster.h"
 
-Wave::Wave(double delta)
-    : Algorithm(delta) {}
+Wave::Wave(double d)
+    : Algorithm(), delta(d) {}
+
+void Wave::reconfigure_distances(const std::vector<Point>& points) {
+    _distances.Reset(points.size(), points.size());
+
+    for (size_t i = 0; i < points.size(); ++i) {
+        for (size_t j = 0; j < points.size(); ++j) {
+            _distances[i][j] = (distance(points[i], points[j]) < delta);
+        }
+    }
+}
+
+void Wave::set_delta(double d) { delta = d; }
 
 void Wave::find(const std::vector<Point>& points) {
     reconfigure_distances(points);
@@ -20,13 +32,13 @@ void Wave::find(const std::vector<Point>& points) {
             int cur = stack.top();
             stack.pop();
             for (size_t j = 0; j < points.size(); ++j) {
-                if ((distances[cur][j] == 1) && (used.count(j) == 0u)) {
+                if ((_distances[cur][j] == 1) && (used.count(j) == 0u)) {
                     used.insert(j);
                     cluster.add(points[j]);
                     stack.push(j);
                 }
             }
         }
-        _clusters.push_back(cluster);
+        _clusters.push_back(std::move(cluster));
     }
 }

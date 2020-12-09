@@ -55,6 +55,18 @@ std::shared_ptr<Token> parse(const std::string& command) {
         } else if (ok && word == "DBSCAN") {
             auto params = parse_parameters(iss, 2);
             return std::make_shared<SearchToken>(ALG::DBSCAN, params);
+        } else if (ok && word == "FOREL") {
+            auto params = parse_parameters(iss, 1);
+            return std::make_shared<SearchToken>(ALG::FOREL, params);
+        } else if (ok && word == "KMEANS") {
+            auto params = parse_parameters(iss, 1);
+            return std::make_shared<SearchToken>(ALG::KMEANS, params);
+        } else if (ok && word == "EM") {
+            auto params = parse_parameters(iss, 1);
+            return std::make_shared<SearchToken>(ALG::EM, params);
+        } else if (ok && (word == "HIERARCHICAL" || word == "HIE")) {
+            auto params = parse_parameters(iss, 1);
+            return std::make_shared<SearchToken>(ALG::HIERAR, params);
         } else {
             throw std::invalid_argument("Bad search! Use HELP");
         }

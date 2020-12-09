@@ -1,7 +1,16 @@
 #pragma once
-#include "../algorithm.h"
+#include <vector>
+#include "algorithm.h"
+#include "point.h"
 
 class KMeans : public Algorithm {
  public:
-    KMeans();
+    explicit KMeans(int k)
+        : k(k) {}
+    int k;
+ public:
+    void find(const std::vector<Point>& points) override;
+ private:
+    double k_means(size_t k, std::vector<Cluster>& clusters, const std::vector<Point>& points);
 };
+

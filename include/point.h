@@ -9,9 +9,11 @@ class Point {
     Point& operator =  (const Point& other);
     Point& operator += (const Point& other);
     Point& operator /= (const Point& other);
+    Point& operator /= (double x);
 
-    Point operator + (const Point& other) const;
-    Point operator - (const Point& other) const;
+    Point operator +  (const Point& other) const;
+    Point operator -  (const Point& other) const;
+    bool  operator == (const Point& other) const;
 
     double x() const;
     double y() const;

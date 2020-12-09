@@ -10,5 +10,6 @@ class DBScan : public Algorithm {
     void find(const std::vector<Point>& points) override;
 
     std::set<size_t> range_query(const Point& p, const std::vector<Point>& points);
+    double _D;
     size_t _K;
 };

@@ -10,7 +10,7 @@ SRC    := ./src
 DATA   := ./data
 
 ALG_FOLDER  := algorithms
-ALGS        := Wave DBScan
+ALGS        := Wave DBScan KMeans Hierarchical FOREL EM
 
 HDR_ALGS  := $(patsubst %, $(HDR)/$(ALG_FOLDER)/%.h, $(ALGS))
 OBJ_ALGS  := $(patsubst %, $(OBJ)/%.o, $(ALGS))
@@ -21,14 +21,10 @@ SUBDATA := $(DATA)/all $(DATA)/histograms $(DATA)/graphs $(DATA_ALGS)
 #Compiler features
 CC     := g++ -c
 LD	   := g++
-CFLAGS := -mfpmath=sse -fstack-protector-all -W -Wall -Wextra -Wunused -Wcast-align \
-		  -Werror -pedantic -pedantic-errors -Wfloat-equal -Wpointer-arith -Wformat-security \
-		  -Wmissing-format-attribute -Wformat=1 -Wwrite-strings -Wcast-align -Wno-long-long  \
-		  -Wcast-qual -Wno-suggest-attribute=format -Wpedantic \
-		  -Wmissing-declarations -I$(HDR) -I$(HDR)/$(ALG_FOLDER)
+CFLAGS := -W -Wall -Wextra -Wunused -Wcast-align -Werror -pedantic -Wmissing-declarations -I$(HDR) -I$(HDR)/$(ALG_FOLDER)
 
 #Variables
-EXE    := $(BIN)/main
+EXE  := $(BIN)/main
 SRCS := $(wildcard $(SRC)/*.cpp)
 OBJS := $(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
 
@@ -92,3 +88,4 @@ clean:
 
 cleandata:
 	$(RMDIR) $(DATA)/*/*.dat $(DATA)/*/plot.p
+	

@@ -1,6 +1,9 @@
 #include "cluster.h"
 #include "point.h"
 
+Cluster::Cluster(const std::vector<Point>& points)
+    : _points(points) {}
+
 void Cluster::add(const Point& p) {
     _points.push_back(p);
 }

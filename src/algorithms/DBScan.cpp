@@ -3,7 +3,7 @@
 #include <algorithm>
 
 DBScan::DBScan(double D, size_t K)
-    : Algorithm(D), _K(K) {}
+    : Algorithm(), _D(D), _K(K) {}
 
 enum LABEL {
     UNDEFINED = -1,
@@ -51,14 +51,14 @@ void DBScan::find(const std::vector<Point>& points) {
                                inserter(nghbrs_i, nghbrs_i.begin()));
             }
         }
-        _clusters.push_back(cluster);
+        _clusters.push_back(std::move(cluster));
     }
 }
 
 std::set<size_t> DBScan::range_query(const Point& p, const std::vector<Point>& points) {
     std::set<size_t> neighbours;
     for (size_t i = 0; i < points.size(); ++i) {
-        if (distance(points[i], p) < delta)
+        if (distance(points[i], p) < _D)
             neighbours.insert(i);
     }
     return neighbours;

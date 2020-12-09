@@ -25,11 +25,23 @@ Point& Point::operator /= (const Point& other) {
     return *this;
 }
 
+Point& Point::operator /= (double x) {
+    this->_x /= x;
+    this->_y /= x;
+    return *this;
+}
+
 Point Point::operator + (const Point& other) const {
     return {this->_x + other._x, this->_y + other._y};
 }
 Point Point::operator - (const Point& other) const {
     return {this->_x - other._x, this->_y - other._y};
+}
+
+#define eps (1e-5)
+
+bool  Point::operator == (const Point& other) const {
+    return (fabs(_x - other._x) < eps && fabs(_y - other._y) < eps);
 }
 
 double Point::x() const { return _x; }

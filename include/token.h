@@ -12,7 +12,11 @@ struct Token {
 enum class ALG {
     UNKNOWN = -1,
     WAVE,
-    DBSCAN
+    DBSCAN,
+    KMEANS,
+    FOREL,
+    HIERAR,
+    EM
 };
 
 
