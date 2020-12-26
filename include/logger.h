@@ -4,11 +4,11 @@
 
 class Logger {
  public:
-    explicit Logger(const std::string& name = {});
+    explicit Logger(int ID, bool record_rule = true);
     void log(const std::string& message);
     std::string str() const;
-
  private:
-    std::string _name;
+    int _ID;
+    bool _record_rule;
     std::ostringstream _oss;
 };

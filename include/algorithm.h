@@ -6,7 +6,7 @@
 class Algorithm {
  public:
     Algorithm() = default;
-    explicit Algorithm(double d);
+    virtual ~Algorithm() = default;
 
     virtual void find(const std::vector<Point>& points) = 0;
 

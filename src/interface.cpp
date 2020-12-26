@@ -1,10 +1,12 @@
-#include <exception>
-#include <fstream>
 #include "interface.h"
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
 #include "parser.h"
 
 Interface::Interface(int new_id, bool record_rule)
-    : ID(new_id), record_log(record_rule) {}
+    : logger(new_id, record_rule) {}
 
 void Interface::start(int argc, char* argv[]) {
     if (!(argc == 1 || argc == 2)) {
@@ -32,11 +34,10 @@ void Interface::start(int argc, char* argv[]) {
     }
 }
 
-
 void Interface::read(std::istream& is) {
     std::string command;
-    std::istringstream iss;
     if (is.peek() == '\n') is.get();
+
     while (std::getline(is, command)) {
         logger.log(command);
         try {
@@ -47,8 +48,8 @@ void Interface::read(std::istream& is) {
                       << "Logs dumped in log.txt" << std::endl;
             logger.log(ex.what());
             log_out();
-        } catch (UTILS cmd) {
-            switch (cmd) {
+        } catch (UTILS uti) {
+            switch (uti) {
             case UTILS::HELP: help();
                 break;
             case UTILS::LOG: log_out();
@@ -56,10 +57,11 @@ void Interface::read(std::istream& is) {
             default:
                 break;
             }
-            if (cmd == UTILS::END)
+            if (uti == UTILS::END) {
                 break;
         }
     }
+}
 }
 
 void Interface::log_out() const {

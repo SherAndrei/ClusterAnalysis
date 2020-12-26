@@ -16,8 +16,8 @@ std::vector<Point>& Cluster::points() {
     return _points;
 }
 
-std::ostream& operator<<(std::ostream& os, const Cluster& cl) {
-    for (const auto& point : cl.points())
+std::ostream& operator << (std::ostream& os, const Cluster& cl) {
+    for (const Point& point : cl.points())
         os << point << '\n';
     return os;
 }

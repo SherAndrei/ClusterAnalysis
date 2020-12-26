@@ -5,7 +5,10 @@
 
 class Controller;
 
-struct Token {
+class Token {
+ protected:
+  virtual ~Token() = default;
+ public:
   virtual void Evaluate(Controller& ctrl) const = 0;
 };
 
